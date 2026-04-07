@@ -1,0 +1,83 @@
+* {
+    bg:           #0B0E14ee;
+    bg-alt:       #14171d;
+    fg:           #B8B5AC;
+    fg-dim:       #3d4046;
+    accent:       #FF8F40;
+    accent-alt:   #E6C54C;
+    blue:         #59C2FF;
+    urgent:       #F07178;
+
+    background-color: transparent;
+    text-color:       @fg;
+    spacing:          0;
+}
+
+window {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @accent;
+    border-radius:    0px;
+    width:            30%;
+    padding:          20px;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing:  12px;
+}
+
+inputbar {
+    children:         [ prompt, entry ];
+    background-color: @bg-alt;
+    padding:          8px 12px;
+    border-radius:    0px;
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    text-color:       @fg;
+    placeholder-color: @fg-dim;
+}
+
+listview {
+    lines:      10;
+    scrollbar:  true;
+    spacing:    2px;
+}
+
+element {
+    padding:       8px 12px;
+    border-radius: 0px;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element selected.normal {
+    background-color: @bg-alt;
+    text-color:       @accent;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element-icon {
+    size: 24px;
+}
+
+element-text {
+    text-color: inherit;
+}
+
+scrollbar {
+    handle-width: 4px;
+    handle-color: @fg-dim;
+}

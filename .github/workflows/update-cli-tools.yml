@@ -1,0 +1,64 @@
+name: Update CLI tools
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  workflow_dispatch:       # manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-cli-tools
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - name: Run update script
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/update-tools.sh
+          rc=0
+          scripts/update-tools.sh || rc=$?
+          if [[ "$rc" -eq 0 ]]; then
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$rc" -eq 1 ]]; then
+            # exit 1 = everything up to date (defined by update-tools.sh)
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+          else
+            # exit 2 = tool failures; any other code = unexpected crash
+            echo "::error::update-tools.sh failed (exit code $rc)"
+            exit 1
+          fi
+
+      - name: Create or update pull request
+        if: steps.update.outputs.updated == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BRANCH="auto/update-cli-tools"
+          git checkout -b "$BRANCH"
+          git add nixos/overlays/cli-tools.nix
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: update cli tools"
+          git push -u origin "$BRANCH" --force
+          # Reuse existing PR or create a new one
+          existing=$(gh pr list --head "$BRANCH" --json number -q '.[0].number')
+          if [ -z "$existing" ]; then
+            gh pr create \
+              --title "chore: update cli tools" \
+              --body "Automated version bump of AI coding tools (claude-code, gemini-cli, opencode, codex)."
+          fi
