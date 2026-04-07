@@ -1,0 +1,3 @@
+-- overseer.nvim configuration.
+
+return {}

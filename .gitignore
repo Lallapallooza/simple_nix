@@ -1,0 +1,11 @@
+.DS_Store
+.claude/
+.direnv/
+result
+result-*
+*.backup.*
+*.swp
+*.swo
+*~
+nixos/hardware-configuration.nix
+.spec/
