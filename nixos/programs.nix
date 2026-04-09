@@ -35,6 +35,8 @@
   environment.systemPackages = with pkgs; [
     # Core utilities
     git git-lfs gh wget curl unzip p7zip file fastfetch optipng
+    imagemagick                # Image conversion/resizing (convert, mogrify)
+    ffmpeg                     # Audio/video transcoding and processing
     age                        # age encryption (used by agenix for key management)
     agenix.packages.${pkgs.stdenv.hostPlatform.system}.default   # age secret management CLI
 
