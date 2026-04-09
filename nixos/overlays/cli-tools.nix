@@ -5,14 +5,14 @@ final: prev:
 
 let
   # -- claude-code (buildNpmPackage, npm tarball) ----------------------
-  claudeCodeVersion = "2.1.96";
-  claudeCodeSrcHash = "sha256-9umpTBjvKllbr8gFDNfjy9KQCz4113xuiQw/CnAs9c0=";
+  claudeCodeVersion = "2.1.97";
+  claudeCodeSrcHash = "sha256-J92ILqBJmXyAueUPZ+HYZY0ls3OfN2EAhFyQHTOQF5A=";
   claudeCodeNpmDepsHash = "sha256-izy3dQProZIdUF5Z11fvGQOm/TBcWGhDK8GvNs8gG5E=";
 
   # -- gemini-cli (buildNpmPackage, GitHub source) ---------------------
-  geminiCliVersion = "0.36.0";
-  geminiCliSrcHash = "sha256-eSGznx64xN/2/TPkLTx57Ar56FogYSzUkINBduhMn/8=";
-  geminiCliNpmDepsHash = "sha256-ztpKe7kgQAgfCBiIBlzPDa5muOI+9kESwrzBLqwz3V0=";
+  geminiCliVersion = "0.37.0";
+  geminiCliSrcHash = "sha256-8UiHsBggmiJCs9sWGQoq0W2FNToAKFakGdAKvFl4ceo=";
+  geminiCliNpmDepsHash = "sha256-lLywxLYmfO7EIYewPwISV5izAcOpy1350oJGwdsV6L8=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
   opencodeVersion = "1.4.0";
