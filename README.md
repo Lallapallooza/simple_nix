@@ -24,7 +24,7 @@ nixos/                   # NixOS system config (flake-based)
   desktop.nix            # SDDM, Hyprland, Plasma, portals, audio, fonts
   security.nix           # SSH, PAM, gnome-keyring, agenix
   programs.nix           # system packages, steam, docker, flatpak
-  auto-upgrade.nix       # nightly rebuild from local clone via systemd timer
+  auto-upgrade.nix       # nightly check for upstream updates + notification
   nordvpn.nix            # NordVPN daemon + GUI (FHS-wrapped from .deb)
   overlays/cli-tools.nix # version overlay for AI coding tools
   home/                  # home-manager modules
@@ -71,8 +71,8 @@ All machine-specific values live here:
   steamScaling = "1.666667";   # match your monitor scale
   cursorSize = 24;             # 16@1x, 24@1.5x, 32@2x
   nvidia = true;               # false for AMD/Intel GPU
-  repoDir = "/home/my_username/code/simple_nix";  # local clone path (for auto-upgrade)
-  autoUpgrade = true;          # nightly rebuild from local clone (git pull + rebuild)
+  repoDir = "/home/my_username/code/simple_nix";  # local clone path (for update checks)
+  autoUpgrade = true;          # nightly check for upstream updates (notifies, doesn't rebuild)
 }
 ```
 
@@ -247,10 +247,10 @@ AI coding tools (claude-code, gemini-cli, codex, opencode) update faster than ni
 nixos/overlays/cli-tools.nix   # version pins + hashes (patched by the update script)
 scripts/update-tools.sh        # checks npm/GitHub, computes hashes, patches the overlay
 .github/workflows/             # CI checks every 6h, creates a PR on change
-nixos/auto-upgrade.nix         # systemd timer: git pull + rebuild nightly at 04:00 (enabled by default)
+nixos/auto-upgrade.nix         # systemd timer: checks for updates nightly at 04:00, notifies user
 ```
 
-The nightly auto-upgrade is **enabled by default** (`autoUpgrade = true` in `host.nix`). It pulls the latest `main` into your local clone (picking up CI-pushed tool updates), then rebuilds from the local checkout. Set to `false` to disable.
+The nightly update check is **enabled by default** (`autoUpgrade = true` in `host.nix`). It fetches `origin/main` and notifies you (shell login + desktop notification) if your local branch is behind. You rebuild manually with `./install.sh`. Set to `false` to disable.
 
 When nixpkgs catches up or passes the overlay version, the overlay becomes a no-op -- the nixpkgs package is used as-is with zero overhead.
 

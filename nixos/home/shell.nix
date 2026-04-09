@@ -30,10 +30,10 @@
     initContent = ''
       [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-      # Alert on failed auto-rebuild (persistent marker written by nixos-rebuild-notify-failure)
-      if [[ -f ~/.local/state/nixos-rebuild-failed ]]; then
-        printf '\e[1;31m%s\e[0m\n' "$(cat ~/.local/state/nixos-rebuild-failed)"
-        rm -f ~/.local/state/nixos-rebuild-failed
+      # Alert on available upstream config updates
+      if [[ -f ~/.local/state/nixos-update-available ]]; then
+        printf '\e[1;33m%s\e[0m\n' "$(cat ~/.local/state/nixos-update-available)"
+        rm -f ~/.local/state/nixos-update-available
       fi
 
       # Import SSH_AUTH_SOCK from systemd (gnome-keyring / gcr-ssh-agent)
