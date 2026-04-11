@@ -5,8 +5,8 @@ final: prev:
 
 let
   # -- claude-code (buildNpmPackage, npm tarball) ----------------------
-  claudeCodeVersion = "2.1.100";
-  claudeCodeSrcHash = "sha256-7/Rhk1z3Us2vOYGa85lkVIzzqdQFmfmAxrT39a7D27Y=";
+  claudeCodeVersion = "2.1.101";
+  claudeCodeSrcHash = "sha256-nPdrFc7RiVuKVHE7ycCzIoCZN/fdgwjbEcTULennchU=";
   claudeCodeNpmDepsHash = "sha256-izy3dQProZIdUF5Z11fvGQOm/TBcWGhDK8GvNs8gG5E=";
 
   # -- gemini-cli (buildNpmPackage, GitHub source) ---------------------
@@ -20,8 +20,8 @@ let
   opencodeNodeModulesHash = "sha256-hVXlQcUuvUudIB35Td6ucBYopM/QOSx59tQbCTqoB/0=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.118.0";
-  codexSrcHash = "sha256-FdtV+CIqTInnegcXrXBxw4aE0JnNDh4GdYKwUDjSk9Y=";
+  codexVersion = "0.120.0";
+  codexSrcHash = "sha256-kj8WWFNk0/ZIefA7xgDox8zvW3y4tyLT2lyi1SyeHz8=";
   codexCargoHash = "sha256-l+3k7j2Qtmw8uUnzLGK9pNJIK0O6fuTpB+XaiP/TWuE=";
   codexLibrustyV8Version = "146.4.0";
   codexLibrustyV8Hashes = {
