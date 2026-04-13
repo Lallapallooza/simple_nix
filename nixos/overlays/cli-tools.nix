@@ -5,8 +5,8 @@ final: prev:
 
 let
   # -- claude-code (buildNpmPackage, npm tarball) ----------------------
-  claudeCodeVersion = "2.1.101";
-  claudeCodeSrcHash = "sha256-nPdrFc7RiVuKVHE7ycCzIoCZN/fdgwjbEcTULennchU=";
+  claudeCodeVersion = "2.1.104";
+  claudeCodeSrcHash = "sha256-Cjf7xYaIPR0xrwEG91/HIt0/2sU+t2mXbadzP2VFucU=";
   claudeCodeNpmDepsHash = "sha256-izy3dQProZIdUF5Z11fvGQOm/TBcWGhDK8GvNs8gG5E=";
 
   # -- gemini-cli (buildNpmPackage, GitHub source) ---------------------
