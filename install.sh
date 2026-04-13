@@ -14,7 +14,7 @@ git -C "$REPO" add -f nixos/hardware-configuration.nix
 
 echo "==> Rebuilding NixOS..."
 _hostname=$(nix eval --raw -f "$REPO/nixos/host.nix" hostname 2>/dev/null || hostname)
-sudo nixos-rebuild switch --flake "$REPO/nixos#$_hostname"
+sudo nixos-rebuild switch -L --flake "$REPO/nixos#$_hostname"
 
 # Ensure new packages are in PATH for the current session
 export PATH="/run/current-system/sw/bin:$PATH"
