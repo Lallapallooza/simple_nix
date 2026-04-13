@@ -85,6 +85,7 @@ in
     # C/C++ / CUDA
     gnumake cmake gcc clang
     clang-tools                # clangd LSP
+    pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
     tree-sitter                # Treesitter CLI (nvim-treesitter parser compilation)
     cudaPackages_12_8.cudatoolkit   # Pinned for Blackwell sm_120 -- bump when nixpkgs ships 12.9+
     cudaPackages_12_8.cudnn         # cuDNN (GPU-accelerated deep learning primitives)
