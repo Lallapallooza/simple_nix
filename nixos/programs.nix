@@ -121,6 +121,7 @@
     gotools                    # Go (goimports)
     prettier                   # TypeScript/JavaScript
     codespell                  # Spell checker for code
+    pre-commit                 # Git pre-commit hook framework
 
     # Desktop apps
     brave vscode vlc spotify telegram-desktop slack yt-dlp qbittorrent
