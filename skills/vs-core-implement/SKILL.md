@@ -36,13 +36,33 @@ Read [references/implementation-methodology.md](references/implementation-method
 
 ## How to Dispatch Agents
 
-When this skill says "dispatch" an agent, you MUST:
-1. Read the referenced prompt file(s) and any _shared/ files they reference
-2. Read `../vs-core-_shared/prompts/trust-boundary.md` (for agents reviewing user content)
-3. Create a sub-agent
-4. Set the `model` parameter to the specified model (strongest, strong, or fast)
-5. **Inline ALL prompt content** into the sub-agent's prompt -- subagents cannot read files from your context. Follow ALL relative file references (including `self-critique-suffix.md`, `adversarial-framing.md`, `output-format.md`, `rationalization-rejection.md`) and inline their contents.
-6. Launch independent agents in a single message for parallel execution
+When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep your own context clean. Reference files (implementation-methodology, language judgment) are 13-67KB each; pulling them into your context via `Read()` or captured stdout would waste tens of thousands of tokens on content only the sub-agent needs.
+
+**The flow:**
+
+1. Build the prompt file. From this skill's directory:
+   ```
+   bash build-prompt.sh --tmp <role> [langs...]
+   ```
+   `<role>` is one of: `planner`, `implementer`, `slice-reviewer`. Pass the language(s) of the feature's files (e.g. `rust python`) to inline the matching judgment files -- all three roles benefit (planner needs language idioms for risk assessment and slice boundaries, implementer needs them to write correct code, reviewer needs them to catch defects). For pure config/docs features, omit language args. The script writes all mandated references into a new temp file and prints **only the path** to stdout. **Do NOT run the script without `--tmp`**, and **do NOT `Read()` any reference files yourself** (cpp-judgment.md, implementation-methodology.md, etc.) -- the script already inlined them into the temp file.
+
+2. Capture the printed path (e.g. `/tmp/vs-implement.FAM96dKI.md`).
+
+3. Dispatch the Agent with a short prompt that points at the temp file and adds task-specific context:
+   ```
+   Your complete instructions are in <TMP_FILE>. Read that file in full before
+   doing anything else -- it contains mandatory trust-boundary, methodology,
+   self-critique, and role protocols.
+
+   Task: [slice acceptance criteria, files, numbered assumptions to validate,
+          any prior reviewer Reflection, relevant rfc.md excerpts]
+   ```
+   Use the `model` specified for the role.
+
+4. Launch independent agents in a single message for parallel execution (when applicable; this skill mostly dispatches sequentially).
+
+### Prompt-size sanity check
+After the Agent returns, confirm the temp file exists on disk with the expected size: planner ≥32KB (≥95KB with one language file), implementer ≥33KB (≥95KB with one language file), slice-reviewer ≥38KB (≥100KB with one language file). Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
 
 ## Artifact Flow
 
@@ -52,14 +72,18 @@ When this skill says "dispatch" an agent, you MUST:
 
 ## Phase 1: Planning
 
-Dispatch a planning agent (model: strong) to:
+Dispatch a planning agent (model: strong) using:
+```
+bash build-prompt.sh --tmp planner <lang1> [<lang2> ...]
+```
+Pass the language(s) of the feature's files. The planner needs language judgment to flag language-specific risks (lifetime-managed cpp code, borrow-checker hotspots in rust, async gotchas in python) and to cut slices along idiomatic boundaries.
+
+The planner will:
 
 1. Understand the full scope of the work
 2. Assess whether slicing is needed: if the feature fits in 1-3 files and one coherent pass, a single slice is valid. Don't slice for the sake of slicing.
 3. If slicing: break into **vertical slices** -- each touching 1-3 files, with one clear purpose, durable acceptance criteria, and a risk assessment
 4. Order slices by dependency: what must exist for later slices to work?
-
-Read [prompts/planner.md](prompts/planner.md) for the planner prompt.
 
 **Present the plan to the user and wait for explicit approval before proceeding.**
 
@@ -72,23 +96,29 @@ For each slice, sequentially. Use the planner's **risk level** to determine veri
 - **Low risk**: Implement -> coordinator spot-checks the diff and test results directly (no separate reviewer dispatch). Accept if tests pass and the diff looks clean.
 
 ### 2a. Implement (model: strong)
-Dispatch an implementer agent with the slice requirements. The implementer:
+Dispatch an implementer agent using:
+```
+bash build-prompt.sh --tmp implementer <lang1> [<lang2> ...]
+```
+Pass the language(s) of the slice's files so the implementer gets language-specific judgment (RAII/lifetime rules for cpp, ownership rules for rust, etc.). If the slice is purely config/docs, omit the language args.
+
+The implementer:
 - Explores the codebase to understand existing patterns
 - Writes implementation and tests (spec-driven -- tests verify the spec's acceptance criteria, not implementation internals)
 - Checks numbered assumptions against codebase reality
 - Runs all tests and reports results
 
-Read [prompts/implementer.md](prompts/implementer.md) for the implementer prompt.
-
 ### 2b. Review (High and Standard risk only) (model: strongest)
-Dispatch a review agent. The reviewer checks in this order:
+Dispatch a review agent using:
+```
+bash build-prompt.sh --tmp slice-reviewer <lang1> [<lang2> ...]
+```
+Pass the language(s) of the slice's files. The reviewer checks in this order:
 1. **Spec compliance**: Does the implementation satisfy the acceptance criteria? (Primary gate)
 2. **Assumption verification**: Did the implementer's assumption checks reveal contradictions?
 3. **Code quality**: Correctness, edge cases, security, architecture (Secondary)
 
 Produce a structured verdict: PASS, NEEDS_FIX, REJECT, or SPEC_DIVERGENCE.
-
-Read [prompts/slice-reviewer.md](prompts/slice-reviewer.md) for the reviewer prompt. Inline the relevant language judgment file(s) from `../vs-core-_shared/prompts/language-specific/` for each language in the slice's files (same approach as /vs-core-audit).
 
 ### 2c. Handle Reviewer Verdict
 
@@ -124,7 +154,16 @@ Present to the user:
 
 Wait for user decision. If they choose option 1, record the contradiction in implement.md's Evolution Log section and update the spec's Assumptions section, then continue. If option 3, recommend re-running `/vs-core-rfc` with the new constraint.
 
-**If PASS**: Record any assumption confirmations from this slice in implement.md's Evolution Log section. Show the user the `git diff` and **ask for explicit approval before committing.** Do not auto-commit. Proceed to next slice.
+**If PASS**: Record any assumption confirmations from this slice in implement.md's Evolution Log section.
+
+Before presenting the diff for commit approval, run the tropes gate:
+
+1. List the slice's changed prose files (git diff --name-only filtered to `*.md`, `*.txt`, `*.rst`, `docs/**`, and any file whose diff contains substantial comment/doc changes).
+2. If ANY prose files changed, invoke `/vs-core-tropes` via the Skill tool on those paths. This is not optional.
+3. If the drafted commit message is non-trivial (more than a one-line summary), include it in the tropes invocation too.
+4. Present the tropes findings (if any) alongside the diff when asking for commit approval. The user decides whether to fix or commit as-is.
+
+Then show the user the `git diff` and **ask for explicit approval before committing.** Do not auto-commit. Proceed to next slice.
 
 ## Phase 3: Final Review
 

@@ -29,13 +29,33 @@ You are a research coordinator. Your job is to deeply understand what the user n
 
 ## How to Dispatch Agents
 
-When this skill says "dispatch" an agent, you MUST:
-1. Read the referenced prompt file(s) and any _shared/ files they reference
-2. Read `../vs-core-_shared/prompts/trust-boundary.md` (for agents reviewing user content)
-3. Create a sub-agent
-4. Set the `model` parameter to the specified model (strongest, strong, or fast)
-5. **Inline ALL prompt content** into the sub-agent's prompt -- subagents cannot read files from your context
-6. Launch independent agents in a single message for parallel execution
+When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep your own context clean. Reference files (source-evaluation, research-methodology, etc.) are 20-30KB each; pulling them into your context via `Read()` or captured stdout would waste tens of thousands of tokens on content only the sub-agent needs.
+
+**The flow:**
+
+1. Build the prompt file. From this skill's directory:
+   ```
+   bash build-prompt.sh --tmp <role>
+   ```
+   `<role>` is one of: `source`, `contrarian`, `codebase`, `deep-technical`, `verification`. The script concatenates all mandated references (trust boundary, output format, rationalization rejection, self-critique protocol, and role-specific methodology) into a new temp file and prints **only the path** to stdout. **Do NOT run the script without `--tmp`**, and **do NOT `Read()` any reference files yourself** (source-evaluation.md, research-methodology.md, etc.) -- the script already inlined them into the temp file.
+
+2. Capture the printed path (e.g. `/tmp/vs-research.kG0NXyCz.md`).
+
+3. Dispatch the Agent with a short prompt that points at the temp file and adds task-specific context:
+   ```
+   Your complete researcher instructions are in <TMP_FILE>. Read that file in full
+   before doing anything else -- it contains mandatory trust-boundary, methodology,
+   and role protocols.
+
+   Mission: [sub-questions, what other agents cover, output format,
+             any relevant upstream artifact summaries]
+   ```
+   Use the `model` specified for the role.
+
+4. Launch independent agents in a single message for parallel execution. Each gets its own temp file.
+
+### Prompt-size sanity check
+After the Agent returns, confirm the temp file exists on disk with the expected size: source ≥65KB, contrarian ≥75KB, codebase ≥43KB, deep-technical ≥65KB, verification ≥47KB. Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
 
 ## Artifact Flow
 
@@ -80,34 +100,40 @@ Read the reference files in `references/` to understand the methodology you're t
 
 ### Agent Roster
 
+All agent prompts are built by `build-prompt.sh` (see "How to Dispatch Agents" above). Do not hand-assemble them.
+
 **Always dispatch for non-trivial questions:**
 
 **Source Researcher** (model: strong)
-> Read [prompts/source-researcher.md](prompts/source-researcher.md)
-> References to inline: Key principles from [references/source-evaluation.md](references/source-evaluation.md) (lateral reading, authority hierarchy, the two-source rule, AI content pollution signals) and [references/search-strategy.md](references/search-strategy.md) (query formulation, progressive narrowing, snippet-first evaluation, saturation signals).
-> Mission: Find primary sources for the assigned sub-questions. Cast a wide net with diverse query formulations. Evaluate source quality using lateral reading. Prioritize production experience over tutorials, official docs over blog posts, primary sources over secondary.
+```
+bash build-prompt.sh --tmp source
+```
+Mission: Find primary sources for the assigned sub-questions. Cast a wide net with diverse query formulations. Evaluate source quality using lateral reading. Prioritize production experience over tutorials, official docs over blog posts, primary sources over secondary.
 
 **Contrarian Researcher** (model: strong)
-> Read [prompts/contrarian-researcher.md](prompts/contrarian-researcher.md)
-> References to inline: Key principles from [references/research-methodology.md](references/research-methodology.md) (confirmation bias mechanisms, devil's advocacy, the Millikan rule, novelty trap, survivorship bias) and [references/source-evaluation.md](references/source-evaluation.md) (equal scrutiny in both directions, Ioannidis corollaries).
-> Mission: Deliberately search for counterevidence, failure modes, criticisms, and alternatives the user hasn't considered. Search for "X failed," "problems with X," "why I stopped using X." Find the strongest case AGAINST the leading option.
+```
+bash build-prompt.sh --tmp contrarian
+```
+Mission: Deliberately search for counterevidence, failure modes, criticisms, and alternatives the user hasn't considered. Search for "X failed," "problems with X," "why I stopped using X." Find the strongest case AGAINST the leading option.
 
 **Dispatch based on question type:**
 
 **Codebase Investigator** (model: strong, subagent_type: Explore)
-> Read [prompts/codebase-investigator.md](prompts/codebase-investigator.md)
-> References to inline: Key principles from [references/codebase-investigation.md](references/codebase-investigation.md) (integrated comprehension model, seek-relate-collect, scent-following, hotspot analysis, the seven questions, entry point identification, git history techniques).
-> Dispatch when: the question involves the current codebase, existing code patterns, or how something works locally. Uses Grep, Glob, Read, Bash (git commands).
+```
+bash build-prompt.sh --tmp codebase
+```
+Dispatch when: the question involves the current codebase, existing code patterns, or how something works locally. Uses Grep, Glob, Read, Bash (git commands).
 
 **Deep Technical Researcher** (model: strong)
-> Read [prompts/deep-technical-researcher.md](prompts/deep-technical-researcher.md)
-> References to inline: Key principles from [references/search-strategy.md](references/search-strategy.md) (citation chaining, domain-specific search, source type portfolio) and [references/source-evaluation.md](references/source-evaluation.md) (three-pass method for papers, Ioannidis corollaries for evaluating academic claims, version-specific truth).
-> Dispatch when: the question requires academic depth -- algorithms, formal methods, foundational papers, or cutting-edge research. Searches academic sources, follows citation chains, reads papers.
+```
+bash build-prompt.sh --tmp deep-technical
+```
+Dispatch when: the question requires academic depth -- algorithms, formal methods, foundational papers, or cutting-edge research. Searches academic sources, follows citation chains, reads papers.
 
-**Verification Agent** (model: strong)
-> Read [prompts/verification-agent.md](prompts/verification-agent.md)
-> References to inline: Key principles from [references/source-evaluation.md](references/source-evaluation.md) (citation laundering, AI content pollution, the evidence provenance chain, "no evidence found" vs "evidence of absence").
-> Dispatch AFTER other agents return. Receives the synthesized findings and spot-checks: do cited sources exist? Do they say what's claimed? Are key claims supported by evidence? This counters Strategic Content Fabrication -- the #1 failure mode of research agents.
+**Verification Agent** (model: strong) -- see Phase 5; dispatch after synthesis, not in parallel with the others.
+```
+bash build-prompt.sh --tmp verification
+```
 
 ### Effort Scaling
 
@@ -152,14 +178,19 @@ You are not a stenographer. You are a judge. The synthesis step is where the rea
 
 **Every factual claim must cite its source.** Distinguish between "official docs say X" and "blog post claims X" and "our codebase shows X." If a claim has no source, it's inference -- label it as such.
 
-## Phase 5: Verify (If Verification Agent Was Dispatched)
+## Phase 5: Verify (MANDATORY)
 
-After synthesis, dispatch the Verification Agent with the draft briefing. It spot-checks:
+After synthesis, dispatch the Verification Agent with the draft briefing. This phase is **not optional** -- it counters Strategic Content Fabrication, the #1 failure mode of research agents.
+
+The only time Phase 5 may be skipped: a single-source, single-agent factual lookup (Effort Scaling "Simple factual question"). For every other scale (moderate, complex, deep), Verification MUST run.
+
+The Verification Agent spot-checks:
 - Do cited sources exist and say what's claimed?
 - Are key statistics accurate?
 - Are there unsupported claims masquerading as sourced?
+- Are any URLs, papers, or commits fabricated?
 
-Integrate verification results into the final output. Remove or flag claims that fail verification.
+Integrate verification results into the final output. Remove or flag claims that fail verification. Do not proceed to Phase 6 until Verification has returned.
 
 ## Phase 6: Present
 

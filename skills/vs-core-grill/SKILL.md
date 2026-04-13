@@ -34,7 +34,7 @@ Interview the user relentlessly about every aspect of this plan until you reach 
 ## Rules
 
 - Ask questions **one at a time**
-- For each question, **provide your recommended answer** -- give the user something to react to, not a blank canvas
+- For each question, **provide your recommended answer as a single declarative sentence the user can accept with "yes" or reject with "no"**. If you need a table, multiple paragraphs, or a "here are your options" list to explain the recommendation, the question is either premature (explore the codebase first) or actually several questions in disguise (split it). A recommendation the user has to interpret is a blank canvas with extra steps.
 - If a question can be answered by **exploring the codebase**, explore the codebase instead of asking the user
 - Resolve dependencies in order: don't ask about implementation details before agreeing on the approach
 - Challenge assumptions: if the user's answer seems to conflict with what you know about the codebase or domain, push back respectfully

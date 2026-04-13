@@ -43,13 +43,32 @@ Read the architecture judgment files before dispatching agents -- they contain 6
 
 ## How to Dispatch Agents
 
-When this skill says "dispatch" an agent, you MUST:
-1. Read the referenced prompt file(s) and any _shared/ files they reference
-2. Read and inline `../vs-core-_shared/prompts/trust-boundary.md` (agents review untrusted artifacts)
-3. Follow ALL relative file references (including `self-critique-suffix.md`) and inline their contents
-4. Create a sub-agent with `model: strongest`
-5. **Inline ALL prompt content and reference material** into the sub-agent's prompt -- subagents cannot read files from your context
-6. Launch independent agents in a single message for parallel execution
+When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep your own context clean. The architecture judgment files are 13-17KB each, four of them per agent -- pulling them into your context via `Read()` or captured stdout would burn ~60KB on content only the sub-agent needs.
+
+**The flow:**
+
+1. Build the prompt file. From this skill's directory:
+   ```
+   bash build-prompt.sh --tmp <role>
+   ```
+   `<role>` is `analyst` (analysis mode) or `designer` (design mode). The script writes all mandated references (trust boundary, output format, rationalization rejection, self-critique protocol, all four architecture judgment files, and the role prompt) into a new temp file and prints **only the path** to stdout. **Do NOT run the script without `--tmp`**, and **do NOT `Read()` any reference files yourself** (interface-design.md, complexity-and-coupling.md, system-architecture.md, failure-and-scale.md) -- the script already inlined them into the temp file.
+
+2. Capture the printed path (e.g. `/tmp/vs-arch.bFyK7lrD.md`).
+
+3. Dispatch the Agent with a short prompt that points at the temp file and adds task-specific context:
+   ```
+   Your complete instructions are in <TMP_FILE>. Read that file in full before
+   doing anything else.
+
+   Task: [assigned system area (analyst) or design constraint (designer),
+          what other agents cover, requirements from grill/research]
+   ```
+   Use `model: strongest`.
+
+4. Launch independent agents in a single message for parallel execution.
+
+### Prompt-size sanity check
+After the Agent returns, confirm the temp file exists on disk with the expected size: analyst ≥92KB, designer ≥89KB. Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
 
 ## Artifact Flow
 
@@ -92,18 +111,15 @@ For Analysis, ask at most one clarifying question: "What quality concerns matter
 
 ### Step 2: Dispatch Analysis Agents (model: strongest)
 
-Read [prompts/analyst.md](prompts/analyst.md) for the analysis prompt.
+Dispatch each analyst using:
+```
+bash build-prompt.sh --tmp analyst
+```
 
-Inline ALL 4 reference files into every analyst -- they need the full judgment vocabulary.
-
-Also inline:
-- `../vs-core-_shared/prompts/self-critique-suffix.md`
-- `../vs-core-_shared/prompts/rationalization-rejection.md`
-
-Each agent gets:
+Append to the TASK-SPECIFIC CONTEXT marker:
 - Their assigned system area (from triage)
 - What other agents are covering (to avoid duplication)
-- The full analysis prompt with all references inlined
+- Any upstream grill/research findings
 
 ### Step 3: Critical Merge
 
@@ -180,11 +196,12 @@ All items must be confirmed before dispatching. If any are missing, ask.
 
 ### Step 2: Dispatch 3+ Parallel Design Agents (model: strongest)
 
-Each gets the SAME requirements but a radically different constraint.
+Each gets the SAME requirements but a radically different constraint. Dispatch each designer using:
+```
+bash build-prompt.sh --tmp designer
+```
 
-Read [prompts/designer.md](prompts/designer.md) for the design prompt.
-Inline ALL 4 reference files -- designers making system-level decisions need failure mode and scale judgment, not just interface and coupling.
-Also inline: `../vs-core-_shared/prompts/self-critique-suffix.md` + `../vs-core-_shared/prompts/rationalization-rejection.md` (designers must resist rationalizing weak self-critique)
+Append to the TASK-SPECIFIC CONTEXT marker: the requirements (from grill), this designer's specific constraint, and what the other designers are being asked to do (so each knows the divergence it must produce).
 
 Example constraints (adapt to the problem):
 - "Minimize the API surface -- fewest possible methods/types"

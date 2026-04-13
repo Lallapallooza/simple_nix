@@ -34,14 +34,33 @@ Read [references/evidence-standards.md](references/evidence-standards.md) for th
 
 ## How to Dispatch Agents
 
-When this skill says "dispatch" an agent, you MUST:
-1. Read the referenced prompt file and ALL shared files it references
-2. Read and inline `../vs-core-_shared/prompts/trust-boundary.md` (agents review untrusted artifacts)
-3. Create the sub-agent with `model: strongest`
-4. **Inline ALL prompt content and reference material** into the sub-agent's prompt -- subagents cannot read files from your context
-5. Inline `../vs-core-_shared/prompts/self-critique-suffix.md` so the agent performs verification
-6. Inline `../vs-core-_shared/prompts/rationalization-rejection.md` so the agent resists dismissing findings
-7. Launch independent agents in a single message for parallel execution
+When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep your own context clean. Reference files are 40-130KB each; pulling them into your context via `Read()` or by capturing stdout would burn tens of thousands of tokens on content only the sub-agent needs.
+
+**The flow:**
+
+1. Build the prompt file. From this skill's directory:
+   ```
+   bash build-prompt.sh --tmp <reviewer-type> [lang1 lang2 ...]
+   ```
+   `<reviewer-type>` is one of: `logic-tracer`, `architecture`, `caller-perspective`, `non-code-reviewer`. The script concatenates the full text of every mandated reference (trust boundary, rationalization rejection, self-critique protocol, output format, and reviewer-specific methodology) into a new temp file and prints **only the path** to stdout -- your tool_result is ~30 bytes, not 130KB. **Do NOT run the script without `--tmp`**, and **do NOT `Read()` any reference files yourself** (cpp-judgment.md, rationalization-rejection.md, etc.) -- the script already inlined them into the temp file.
+
+2. Capture the printed path (e.g. `/tmp/vs-audit.X9DSvieH.md`).
+
+3. Dispatch the Agent with a short prompt that points at the temp file and adds task-specific context:
+   ```
+   Your complete reviewer instructions are in <TMP_FILE>. Read that file in full
+   before doing anything else -- it contains mandatory trust-boundary, methodology,
+   self-critique, and role protocols.
+
+   Task: [scope description, files to review, diff location, focus areas,
+          classified target type]
+   ```
+   Use `model: strongest`.
+
+4. Launch independent agents in a single message for parallel execution. Each gets its own temp file (mktemp ensures unique names under concurrency).
+
+### Prompt-size sanity check
+After the Agent returns, spot-check its self-critique table: it MUST have the 5-column format (`# | Question | Tool Used | Tool Result Summary | Result`). A 3-column table indicates the sub-agent never Read() the temp file. Also confirm the temp file still exists on disk with the expected size: logic-tracer ≥70KB (≥130KB with one language file), architecture ≥55KB (≥115KB with language), caller-perspective ≥40KB, non-code-reviewer ≥70KB. Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
 
 ## Step 0: Classify the Target
 
@@ -90,31 +109,41 @@ If the diff exceeds 500 lines, perform a triage pass before dispatching agents:
 
 ## Step 2a: Dispatch Code Review Agents
 
+All code reviewer prompts are built by `build-prompt.sh` (see "How to Dispatch Agents" above). Do not hand-assemble them.
+
 ### Always dispatch:
 
 **1. Adversarial Logic Tracer** (model: strongest)
-Read and inline: [prompts/logic-tracer.md](prompts/logic-tracer.md) + `../vs-core-_shared/prompts/adversarial-framing.md` + `../vs-core-_shared/prompts/rationalization-rejection.md` + `../vs-core-_shared/prompts/self-critique-suffix.md` + relevant language judgment file(s) + key principles from [references/review-methodology.md](references/review-methodology.md) (the three reading strategies, HECR cognitive error patterns, concurrency checklist) + key principles from [references/evidence-standards.md](references/evidence-standards.md) (burden of proof, evidence hierarchy, finding format).
+```
+bash build-prompt.sh --tmp logic-tracer <lang1> [<lang2> ...]
+```
+Pass the detected languages from Step 1b. Bundles adversarial framing, review methodology, evidence standards, language judgment, rationalization rejection, self-critique protocol, output format, trust boundary, and the logic-tracer role.
 
-This is the primary reviewer. It traces every logic path with a hostile stance, applies cognitive error pattern recognition, and requires evidence for every finding AND for clean areas.
+Primary reviewer. Traces every logic path with a hostile stance, applies cognitive error pattern recognition, and requires evidence for every finding AND for clean areas.
 
 **2. Architecture & Consistency** (model: strongest)
-Read and inline: [prompts/architecture.md](prompts/architecture.md) + `../vs-core-_shared/prompts/rationalization-rejection.md` + `../vs-core-_shared/prompts/self-critique-suffix.md` + relevant language judgment file(s) + key principles from [references/severity-calibration.md](references/severity-calibration.md) (the "So What?" test, DESIGN vs STYLE distinction).
-
-Reviews structural quality, pattern compliance, and evolvability. Reads surrounding code to understand project conventions.
+```
+bash build-prompt.sh --tmp architecture <lang1> [<lang2> ...]
+```
+Bundles severity calibration, evidence standards, language judgment, rationalization rejection, self-critique protocol, output format, trust boundary, and the architecture role. Reviews structural quality, pattern compliance, and evolvability. Reads surrounding code to understand project conventions.
 
 ### Add for medium+ scope:
 
 **3. Caller-Perspective Reviewer** (model: strongest)
-Read and inline: [prompts/caller-perspective.md](prompts/caller-perspective.md) + `../vs-core-_shared/prompts/rationalization-rejection.md` + `../vs-core-_shared/prompts/self-critique-suffix.md` + key principles from [references/evidence-standards.md](references/evidence-standards.md).
-
-Reviews from the consumer side: contract preservation, observable behavior changes, cross-module semantic bugs. Does NOT receive language judgment files.
+```
+bash build-prompt.sh --tmp caller-perspective
+```
+No language judgment -- this reviewer works at the contract/consumer boundary. Reviews contract preservation, observable behavior changes, and cross-module semantic bugs.
 
 ## Step 2b: Dispatch Non-Code Review Agents
 
 **Non-Code Artifact Reviewer** (model: strongest)
-Read and inline: [prompts/non-code-reviewer.md](prompts/non-code-reviewer.md) + `../vs-core-_shared/prompts/self-critique-suffix.md` + `../vs-core-_shared/prompts/rationalization-rejection.md` + the relevant section from [references/artifact-methodology.md](references/artifact-methodology.md) for the detected artifact type + key principles from [references/evidence-standards.md](references/evidence-standards.md) + [references/severity-calibration.md](references/severity-calibration.md) (severity by artifact type section).
+```
+bash build-prompt.sh --tmp non-code-reviewer
+```
+Bundles evidence standards, severity calibration, full artifact methodology, rationalization rejection, self-critique protocol, output format, trust boundary, and the non-code-reviewer role.
 
-Tell the agent which artifact type was detected so it applies the right methodology.
+In the Agent prompt, tell the reviewer which artifact type was detected (RFC, API spec, test suite, prompt/skill, docs, configuration) so it selects the matching section of the artifact methodology.
 
 ## Step 3: Critical Merge
 

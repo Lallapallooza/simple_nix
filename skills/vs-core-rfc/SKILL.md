@@ -31,13 +31,35 @@ You are an RFC coordinator. You guide a feature from rough idea to a living impl
 
 ## How to Dispatch Agents
 
-When this skill says "dispatch" an agent, you MUST:
-1. Read the referenced prompt file(s) and any _shared/ files they reference
-2. Read `../vs-core-_shared/prompts/trust-boundary.md` (for agents reviewing user content)
-3. Create a sub-agent
-4. Set the `model` parameter to the specified model (strongest, strong, or fast)
-5. **Inline ALL prompt content** into the sub-agent's prompt -- subagents cannot read files from your context. Follow ALL relative file references (including `self-critique-suffix.md`, `adversarial-framing.md`, `output-format.md`, `rationalization-rejection.md`) and inline their contents.
-6. Launch independent agents in a single message for parallel execution
+This skill invokes `/vs-core-grill` (Phase 1) and `/vs-core-research` (Phase 2) via the Skill tool -- those run their own logic, not as sub-agents. Only Phase 3 (designers) and Phase 4 (reviewers + revision-designer) use sub-agent dispatch.
+
+When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep your own context clean. The spec-methodology reference is 14KB; pulling it into your context via `Read()` or captured stdout would burn tokens on content only the sub-agent needs.
+
+**The flow:**
+
+1. Build the prompt file. From this skill's directory:
+   ```
+   bash build-prompt.sh --tmp <role>
+   ```
+   `<role>` is one of: `designer`, `adversarial-design`, `feasibility`, `revision-designer`. The script writes all mandated references (trust boundary, output format, rationalization rejection, self-critique protocol, spec methodology, and the role prompt) into a new temp file and prints **only the path** to stdout. **Do NOT run the script without `--tmp`**, and **do NOT `Read()` any reference files yourself** (spec-methodology.md, etc.) -- the script already inlined them into the temp file.
+
+2. Capture the printed path (e.g. `/tmp/vs-rfc.IPc3vr6b.md`).
+
+3. Dispatch the Agent with a short prompt that points at the temp file and adds task-specific context:
+   ```
+   Your complete instructions are in <TMP_FILE>. Read that file in full before
+   doing anything else.
+
+   Task: [requirements from grill, research findings (if run), this agent's
+          specific constraint or review focus. For revision-designer: merged
+          Phase 4 findings + most recent Reflection.]
+   ```
+   Use the `model` specified for the role.
+
+4. Launch independent agents in a single message for parallel execution.
+
+### Prompt-size sanity check
+After the Agent returns, confirm the temp file exists on disk with the expected size: designer ≥35KB, adversarial-design ≥38KB, feasibility ≥35KB, revision-designer ≥35KB. Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
 
 ## Artifact Flow
 
@@ -68,13 +90,12 @@ The research must answer the open questions with evidence. Its output feeds dire
 
 ## Phase 3: Design -- "Design It Twice"
 
-Read [references/spec-methodology.md](references/spec-methodology.md) for the specification principles that guide this phase. Inline the key principles ("Spec the What and Why", "The Google Design Doc Principle", "Numbered Assumptions") when dispatching design agents.
+Dispatch 3+ parallel design agents (model: strong), each with a radically different constraint, using:
+```
+bash build-prompt.sh --tmp designer
+```
 
-Dispatch 3+ parallel design agents (model: strong), each with a radically different constraint.
-
-Read [prompts/designer.md](prompts/designer.md) for the design agent prompt.
-
-Give each designer:
+Give each designer (via the TASK-SPECIFIC CONTEXT marker):
 - The same requirements (from Phase 1 grill output)
 - The same research findings (from Phase 2, if run)
 - A different constraint that forces a fundamentally different approach
@@ -99,10 +120,14 @@ Recommend one. **Wait for user approval before proceeding.**
 Dispatch 2 parallel reviewers on the chosen design:
 
 **Adversarial Design Reviewer** (model: strongest)
-Read [prompts/adversarial-design.md](prompts/adversarial-design.md).
+```
+bash build-prompt.sh --tmp adversarial-design
+```
 
 **Feasibility Reviewer** (model: strong)
-Read [prompts/feasibility.md](prompts/feasibility.md).
+```
+bash build-prompt.sh --tmp feasibility
+```
 
 **Critical Merge** (after both reviewers return)
 
@@ -134,12 +159,15 @@ Only the most recent reflection is passed forward; do not accumulate reflections
 
 **Step 2: Revise**
 
-Dispatch a revision-designer agent (model: strong) with:
+Dispatch a revision-designer agent (model: strong) using:
+```
+bash build-prompt.sh --tmp revision-designer
+```
+
+Append to the TASK-SPECIFIC CONTEXT marker:
 - The current design
 - The merged findings document
 - The reflection from Step 1
-
-Read [prompts/revision-designer.md](prompts/revision-designer.md) for the revision agent prompt.
 
 **Step 3: Re-review**
 
