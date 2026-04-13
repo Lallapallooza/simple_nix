@@ -1,5 +1,9 @@
 { lib, pkgs, agenix, host, ... }:
 
+let
+  mathLibs = with pkgs; [ blis openblas fftw gsl suitesparse eigen ];
+in
+
 {
   # --- Development ---
   programs.direnv.enable = true;        # Auto-load .envrc per-directory environments
@@ -79,11 +83,19 @@
     jdk kotlin kotlin-language-server
 
     # C/C++ / CUDA
-    gnumake cmake clang
+    gnumake cmake gcc clang
     clang-tools                # clangd LSP
     tree-sitter                # Treesitter CLI (nvim-treesitter parser compilation)
     cudaPackages_12_8.cudatoolkit   # Pinned for Blackwell sm_120 -- bump when nixpkgs ships 12.9+
     cudaPackages_12_8.cudnn         # cuDNN (GPU-accelerated deep learning primitives)
+
+    # Numerical / math libraries (CPU)
+    blis                       # BLAS tuned for Zen (matches/beats MKL on Ryzen)
+    openblas                   # BLAS + LAPACK (bundles cblas.h/libcblas, lapacke)
+    fftw                       # FFT (double precision)
+    eigen                      # Header-only C++ linear algebra
+    gsl                        # GNU Scientific Library
+    suitesparse                # Sparse linear algebra (UMFPACK, CHOLMOD, etc.)
 
     # Node/TypeScript
     nodejs typescript bun
@@ -165,5 +177,18 @@
     playerctl                  # MPRIS media player control (play/pause/next)
     seahorse                   # GUI for managing gnome-keyring passwords
     wdisplays                  # Wayland display/monitor configuration GUI
-  ];
+  ] ++ (map lib.getDev mathLibs);
+
+  # Expose math lib headers + libs + pkg-config globally so gcc/clang and
+  # pkg-config resolve them without a per-project nix-shell.
+  # Trade-off: these env vars leak into unrelated user-session compilations;
+  # switch to a shell.nix per project if that causes surprises.
+  environment.variables = {
+    CPATH = lib.makeSearchPathOutput "dev" "include" mathLibs;
+    LIBRARY_PATH = lib.makeLibraryPath mathLibs;
+    PKG_CONFIG_PATH = lib.concatStringsSep ":" [
+      (lib.makeSearchPathOutput "dev" "lib/pkgconfig" mathLibs)
+      (lib.makeSearchPathOutput "dev" "share/pkgconfig" mathLibs)
+    ];
+  };
 }
