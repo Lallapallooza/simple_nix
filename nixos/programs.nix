@@ -184,6 +184,8 @@ in
   # Trade-off: these env vars leak into unrelated user-session compilations;
   # switch to a shell.nix per project if that causes surprises.
   environment.variables = {
+    CC = "clang";
+    CXX = "clang++";
     CPATH = lib.makeSearchPathOutput "dev" "include" mathLibs;
     LIBRARY_PATH = lib.makeLibraryPath mathLibs;
     PKG_CONFIG_PATH = lib.concatStringsSep ":" [
