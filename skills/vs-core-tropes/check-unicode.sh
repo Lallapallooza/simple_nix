@@ -12,6 +12,24 @@ paths=("${@:-.}")
 # Using hex escapes to avoid shell quoting issues with unicode.
 pattern=$'\xe2\x80\x94|\xe2\x80\x93|\xe2\x86\x92|\xe2\x86\x90|\xe2\x86\x94|\xe2\x94\x80|\xe2\x95\x90|\xe2\x95\x91|\xe2\x95\x94|\xe2\x95\x97|\xe2\x95\x9a|\xe2\x95\x9d|\xe2\x95\xa0|\xe2\x95\xa3|\xe2\x95\xa6|\xe2\x95\xa9|\xe2\x95\xac|\xe2\x94\x82|\xe2\x80\x9c|\xe2\x80\x9d|\xe2\x80\x98|\xe2\x80\x99|\xe2\x9c\x93|\xe2\x9c\x97|\xe2\x89\xa0|\xe2\x89\xa4|\xe2\x89\xa5|\xe2\x89\x88|\xc3\x97|\xc2\xb7|\xe2\x80\xa6'
 
+# Split paths: explicit files are checked as-is; directories get recursive
+# --include='*.md' scans (the default "sweep a prose dir" use case).
+files=()
+dirs=()
+for p in "${paths[@]}"; do
+  if [[ -d "$p" ]]; then dirs+=("$p"); else files+=("$p"); fi
+done
+
+run_grep() {
+  local mode="$1"  # scan | count
+  case "$mode" in
+    scan)  grep_args=(-HPn) ;;
+    count) grep_args=(-HPc) ;;
+  esac
+  (( ${#files[@]} > 0 )) && grep "${grep_args[@]}" "$pattern" "${files[@]}" 2>/dev/null || true
+  (( ${#dirs[@]} > 0 )) && grep -r "${grep_args[@]}" "$pattern" --include='*.md' "${dirs[@]}" 2>/dev/null || true
+}
+
 total=0
 declare -A char_counts
 
@@ -27,7 +45,7 @@ while IFS= read -r line; do
     total=$(( total + 1 ))
   done < <(echo "$content" | grep -oP "$pattern")
 
-done < <(grep -rPn "$pattern" --include='*.md' "${paths[@]}" 2>/dev/null || true)
+done < <(run_grep scan)
 
 if (( total == 0 )); then
   echo "Clean -- no non-human unicode found."
@@ -37,7 +55,7 @@ fi
 # Per-file counts
 echo "=== Files with non-human unicode ==="
 echo ""
-grep -rPc "$pattern" --include='*.md' "${paths[@]}" 2>/dev/null \
+run_grep count \
   | grep -v ':0$' \
   | sort -t: -k2 -rn \
   | head -30
