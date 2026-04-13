@@ -88,6 +88,23 @@
     # Node/TypeScript
     nodejs typescript bun
 
+    # Profiling & tracing (CPU, memory, dynamic tracing across C++/Rust/Python)
+    linuxPackages_latest.perf  # Linux sampling profiler (foundation)
+    flamegraph                 # Brendan Gregg's flame graph scripts
+    pprof                      # Cross-language pprof-format profile viewer
+    graphviz                   # DOT graph renderer (pprof graphs, general use)
+    hyperfine                  # CLI benchmarking (--export-json)
+    samply                     # Modern sampling profiler -> Firefox Profiler
+    hotspot                    # GUI for perf data
+    cargo-flamegraph           # `cargo flamegraph` convenience for Rust
+    heaptrack                  # Heap profiler for C/C++/Rust (fast, text report)
+    valgrind                   # memcheck/massif/callgrind/cachegrind
+    py-spy                     # Python sampling profiler, attach-to-running
+    memray                     # Python memory profiler (Bloomberg)
+    scalene                    # Python CPU+memory+GPU, Python vs native split
+    bpftrace                   # eBPF dynamic tracing (JSON output)
+    uftrace                    # Function-graph tracer (C/C++/Rust)
+
     # AI coding tools
     claude-code gemini-cli codex opencode rtk glow beads
 
