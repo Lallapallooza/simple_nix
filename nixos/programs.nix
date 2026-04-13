@@ -89,7 +89,7 @@
     nodejs typescript bun
 
     # Profiling & tracing (CPU, memory, dynamic tracing across C++/Rust/Python)
-    linuxPackages_latest.perf  # Linux sampling profiler (foundation)
+    perf                       # Linux sampling profiler (foundation)
     flamegraph                 # Brendan Gregg's flame graph scripts
     pprof                      # Cross-language pprof-format profile viewer
     graphviz                   # DOT graph renderer (pprof graphs, general use)
