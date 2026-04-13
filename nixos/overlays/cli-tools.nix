@@ -22,7 +22,7 @@ let
   # -- codex (buildRustPackage, GitHub source) -------------------------
   codexVersion = "0.120.0";
   codexSrcHash = "sha256-kj8WWFNk0/ZIefA7xgDox8zvW3y4tyLT2lyi1SyeHz8=";
-  codexCargoHash = "sha256-l+3k7j2Qtmw8uUnzLGK9pNJIK0O6fuTpB+XaiP/TWuE=";
+  codexCargoHash = "sha256-VY97UmTju9p+0rjdHXPaIq7JWTebZCrFzzrxyIjxaOg=";
   codexLibrustyV8Version = "146.4.0";
   codexLibrustyV8Hashes = {
     x86_64-linux = "sha256-5ktNmeSuKTouhGJEqJuAF4uhA4LBP7WRwfppaPUpEVM=";
@@ -107,11 +107,11 @@ in {
         hash = codexSrcHash;
       };
       sourceRoot = "${src.name}/codex-rs";
-      cargoDeps = old.cargoDeps.overrideAttrs {
-        name = "codex-${version}-vendor";
+      # Fresh build, not override: overrideAttrs doesn't reach nested vendorStaging -> stale Cargo.lock.
+      cargoDeps = prev.rustPlatform.fetchCargoVendor {
         inherit src sourceRoot;
-        outputHash = codexCargoHash;
-        outputHashMode = "recursive";
+        name = "codex-${version}-vendor";
+        hash = codexCargoHash;
       };
       env = old.env // {
         RUSTY_V8_ARCHIVE = prev.fetchurl {
