@@ -15,6 +15,9 @@
   # --- Networking ---
   networking.hostName = host.hostname;
   networking.networkmanager.enable = true;
+  # Writable DNS backend so VPN clients (NordVPN) and NetworkManager can push
+  # resolvers via D-Bus -- /etc/resolv.conf is read-only on NixOS.
+  services.resolved.enable = true;
 
   # --- Nix settings ---
   nix.settings = {
