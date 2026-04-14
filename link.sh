@@ -51,7 +51,7 @@ ln -sf "$REPO/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 mkdir -p "$HOME/.config/hyprpanel"
 ln -sf "$REPO/config/hyprpanel/config.json" "$HOME/.config/hyprpanel/config.json"
 mkdir -p "$HOME/.config/hypr"
-for f in user.conf hypridle.conf hyprlock.conf hyprpaper.conf cheatsheet.sh toggle-layout.sh; do
+for f in user.conf hypridle.conf hyprlock.conf hyprpaper.conf cheatsheet.sh toggle-layout.sh notif-log.py; do
   ln -sf "$REPO/config/hypr/$f" "$HOME/.config/hypr/$f"
 done
 

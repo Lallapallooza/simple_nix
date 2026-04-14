@@ -35,7 +35,10 @@
     options = "--delete-older-than 30d";
   };
 
-  nixpkgs.overlays = [ (import ./overlays/cli-tools.nix) ];
+  nixpkgs.overlays = [
+    (import ./overlays/cli-tools.nix)
+    (import ./overlays/hyprpanel.nix)
+  ];
   nixpkgs.config.allowUnfree = true;
 
   # --- Locale ---
