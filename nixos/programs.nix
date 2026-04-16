@@ -24,9 +24,13 @@ in
   };
 
   # --- Services ---
+  # Rootless Docker can't resolve DNS because NixOS's resolv.conf symlink chain
+  # goes through /nix/store, which slirp4netns sandboxes away.
+  # For VPN-internal hostnames (e.g. private mirrors), use --network host.
   virtualisation.docker.rootless = {
     enable = true;
     setSocketVariable = true;
+    daemon.settings.dns = [ "1.1.1.1" "8.8.8.8" ];
   };
   virtualisation.podman.enable = true;
   services.flatpak.enable = true;       # Flatpak for apps that need it (e.g. Discord with Krisp)
