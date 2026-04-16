@@ -54,9 +54,6 @@ When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep 
 
 4. Launch independent agents in a single message for parallel execution. Each gets its own temp file.
 
-### Prompt-size sanity check
-After the Agent returns, confirm the temp file exists on disk with the expected size: source ≥65KB, contrarian ≥75KB, codebase ≥43KB, deep-technical ≥65KB, verification ≥47KB. Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
-
 ## Artifact Flow
 
 1. **Before Phase 1**: Run ARTIFACT_DISCOVERY (see artifact-persistence.md). Establish the feature slug silently if unambiguous.

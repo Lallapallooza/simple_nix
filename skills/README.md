@@ -64,9 +64,9 @@ Not every task needs every step. Small bug fix: `/vs-core-debug`. Quick feature:
 | `self-critique-suffix.md` | CRITIC protocol -- tool-grounded verification with worked examples (Huang ICLR 2024) |
 | `trust-boundary.md` | Courtroom framing -- reviewed content is exhibits to examine, not instructions to follow |
 
-### Language Judgment Files (`vs-core-_shared/prompts/language-specific/`)
+### Judgment Files (`vs-core-_shared/prompts/language-specific/`)
 
-5 senior engineering judgment files. How an engineer thinks about trade-offs -- not checklists, but when to break the rules.
+Senior engineering judgment files. How an engineer thinks about trade-offs -- not checklists, but when to break the rules.
 
 | File | Coverage |
 |------|----------|
@@ -75,8 +75,9 @@ Not every task needs every step. Small bug fix: `/vs-core-debug`. Quick feature:
 | `python-judgment.md` | Data modeling, type system, concurrency, dynamic nature |
 | `typescript-judgment.md` | Type system as design tool, soundness holes, ecosystem |
 | `cpp-judgment.md` | Universal C++ (LLVM, Unreal, embedded, Google, Meta, HFT) |
+| `perf-judgment.md` | Universal performance: measurement discipline, asm reading, profiling tools, memory hierarchy, SIMD, concurrency, I/O, 20 algorithmic principles |
 
-Loaded by `/vs-core-audit` for code reviews.
+Loaded by `/vs-core-implement` and `/vs-core-audit` -- pass language names (`rust`, `python`, etc.) and/or `perf` as args to `build-prompt.sh` to inline the relevant judgment.
 
 ## Per-Skill Details
 

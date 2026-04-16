@@ -61,9 +61,6 @@ When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep 
 
 4. Launch independent agents in a single message for parallel execution (when applicable; this skill mostly dispatches sequentially).
 
-### Prompt-size sanity check
-After the Agent returns, confirm the temp file exists on disk with the expected size: planner ≥32KB (≥95KB with one language file), implementer ≥33KB (≥95KB with one language file), slice-reviewer ≥38KB (≥100KB with one language file). Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
-
 ## Artifact Flow
 
 1. **Before planning begins**: Run ARTIFACT_DISCOVERY (see artifact-persistence.md). Establish the feature slug silently if unambiguous. Run UPSTREAM_CONSUMPTION for `rfc.md`. If `rfc.md` is missing, warn the user: "No rfc.md found for this feature. Proceed without a spec?" and wait for their answer before continuing.
@@ -74,9 +71,9 @@ After the Agent returns, confirm the temp file exists on disk with the expected 
 
 Dispatch a planning agent (model: strong) using:
 ```
-bash build-prompt.sh --tmp planner <lang1> [<lang2> ...]
+bash build-prompt.sh --tmp planner <lang1> [<lang2> ...] [perf]
 ```
-Pass the language(s) of the feature's files. The planner needs language judgment to flag language-specific risks (lifetime-managed cpp code, borrow-checker hotspots in rust, async gotchas in python) and to cut slices along idiomatic boundaries.
+Pass the language(s) of the feature's files. The planner needs language judgment to flag language-specific risks (lifetime-managed cpp code, borrow-checker hotspots in rust, async gotchas in python) and to cut slices along idiomatic boundaries. Also pass `perf` if the feature is perf-sensitive (hot paths, algorithmic kernels, optimization claims) -- loads the universal performance-engineering judgment file.
 
 The planner will:
 
@@ -98,9 +95,9 @@ For each slice, sequentially. Use the planner's **risk level** to determine veri
 ### 2a. Implement (model: strong)
 Dispatch an implementer agent using:
 ```
-bash build-prompt.sh --tmp implementer <lang1> [<lang2> ...]
+bash build-prompt.sh --tmp implementer <lang1> [<lang2> ...] [perf]
 ```
-Pass the language(s) of the slice's files so the implementer gets language-specific judgment (RAII/lifetime rules for cpp, ownership rules for rust, etc.). If the slice is purely config/docs, omit the language args.
+Pass the language(s) of the slice's files so the implementer gets language-specific judgment (RAII/lifetime rules for cpp, ownership rules for rust, etc.). Also pass `perf` if the slice touches a hot path or makes optimization claims. If the slice is purely config/docs, omit all judgment args.
 
 The implementer:
 - Explores the codebase to understand existing patterns
@@ -111,9 +108,9 @@ The implementer:
 ### 2b. Review (High and Standard risk only) (model: strongest)
 Dispatch a review agent using:
 ```
-bash build-prompt.sh --tmp slice-reviewer <lang1> [<lang2> ...]
+bash build-prompt.sh --tmp slice-reviewer <lang1> [<lang2> ...] [perf]
 ```
-Pass the language(s) of the slice's files. The reviewer checks in this order:
+Pass the language(s) of the slice's files. Also pass `perf` if the slice claims a perf improvement or touches a hot path -- the reviewer will hold perf claims to the profile-guided evidence standard. The reviewer checks in this order:
 1. **Spec compliance**: Does the implementation satisfy the acceptance criteria? (Primary gate)
 2. **Assumption verification**: Did the implementer's assumption checks reveal contradictions?
 3. **Code quality**: Correctness, edge cases, security, architecture (Secondary)

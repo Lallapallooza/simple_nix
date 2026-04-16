@@ -36,15 +36,17 @@ emit_universal() {
   emit_section "SELF-CRITIQUE PROTOCOL"    "$SHARED_DIR/prompts/self-critique-suffix.md"
 }
 
-# Emit one LANGUAGE JUDGMENT section per language whose judgment file exists.
-# Unknown languages are skipped silently (consistent with skip-when-no-match
-# policy in vs-core-audit SKILL.md Step 1b).
+# Emit one JUDGMENT section per name whose judgment file exists. Names map to
+# files at $SHARED_DIR/prompts/language-specific/${name}-judgment.md. Pass
+# language names (rust, python, cpp, go, typescript) and/or universal names
+# (perf for performance-sensitive work). Unknown names are skipped silently
+# (consistent with skip-when-no-match policy in vs-core-audit SKILL.md Step 1b).
 emit_lang_sections() {
-  local lang f
-  for lang in "$@"; do
-    f="$SHARED_DIR/prompts/language-specific/${lang}-judgment.md"
+  local name f
+  for name in "$@"; do
+    f="$SHARED_DIR/prompts/language-specific/${name}-judgment.md"
     if [[ -f "$f" ]]; then
-      emit_section "LANGUAGE JUDGMENT: ${lang}" "$f"
+      emit_section "JUDGMENT: ${name}" "$f"
     fi
   done
 }

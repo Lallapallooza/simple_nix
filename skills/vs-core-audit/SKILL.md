@@ -59,8 +59,8 @@ When this skill says "dispatch" an agent, you MUST use the `--tmp` flow to keep 
 
 4. Launch independent agents in a single message for parallel execution. Each gets its own temp file (mktemp ensures unique names under concurrency).
 
-### Prompt-size sanity check
-After the Agent returns, spot-check its self-critique table: it MUST have the 5-column format (`# | Question | Tool Used | Tool Result Summary | Result`). A 3-column table indicates the sub-agent never Read() the temp file. Also confirm the temp file still exists on disk with the expected size: logic-tracer ≥70KB (≥130KB with one language file), architecture ≥55KB (≥115KB with language), caller-perspective ≥40KB, non-code-reviewer ≥70KB. Materially smaller means the script was called without `--tmp` or with wrong args -- rebuild and redispatch.
+### Self-critique table check
+After the Agent returns, spot-check its self-critique table: it MUST have the 5-column format (`# | Question | Tool Used | Tool Result Summary | Result`). A 3-column table indicates the sub-agent never Read() the temp file.
 
 ## Step 0: Classify the Target
 
@@ -94,7 +94,8 @@ Mixed targets (PR containing code + config + docs): dispatch BOTH code and non-c
 For each language in the diff, identify the matching file in `../vs-core-_shared/prompts/language-specific/`:
 - Rust -> `rust-judgment.md`, Python -> `python-judgment.md`, C++ -> `cpp-judgment.md`, Go -> `go-judgment.md`, TypeScript -> `typescript-judgment.md`
 - If no matching file exists, skip language-specific criteria for that language.
-- **Inline language judgment files into the Logic Tracer and Architecture agents only.** The Caller-Perspective agent does not need them.
+- **Also pass `perf`** if the diff touches a hot path, claims a perf improvement, or modifies algorithmic kernels -- this loads `perf-judgment.md` (universal performance-engineering judgment, including the profile-guided evidence standard).
+- **Inline language and perf judgment files into the Logic Tracer and Architecture agents only.** The Caller-Perspective agent does not need them.
 
 ### 1c. Risk-based triage (for large diffs)
 
