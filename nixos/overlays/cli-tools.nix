@@ -5,8 +5,8 @@ final: prev:
 
 let
   # -- claude-code (buildNpmPackage, npm tarball) ----------------------
-  claudeCodeVersion = "2.1.111";
-  claudeCodeSrcHash = "sha256-K3qhZXVJ2DIKv7YL9f/CHkuUYnK0lkIR1wjEa+xeSCk=";
+  claudeCodeVersion = "2.1.112";
+  claudeCodeSrcHash = "sha256-SJJqU7XHbu9IRGPMJNUg6oaMZiQUKqJhI2wm7BnR1gs=";
   claudeCodeNpmDepsHash = "sha256-izy3dQProZIdUF5Z11fvGQOm/TBcWGhDK8GvNs8gG5E=";
 
   # -- gemini-cli (buildNpmPackage, GitHub source) ---------------------
@@ -15,9 +15,9 @@ let
   geminiCliNpmDepsHash = "sha256-T3fxNFvkLR7f49GQjzzTnl3VM+VUUgJfFF5d2GGe7L4=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.4.6";
-  opencodeSrcHash = "sha256-rVbWlVY4ujNVaE1o3SJmD0NrfWDtAfH+8MhOzmGgnhM=";
-  opencodeNodeModulesHash = "sha256-0vIkCiVnyy3FwXWI3ZooskJGMhEI75BP9Xc/ZLWaTbk=";
+  opencodeVersion = "1.4.9";
+  opencodeSrcHash = "sha256-fY4V3VUHjYdiSrixUQbGGJpaqQRS8lyGKQbHdR5SiTY=";
+  opencodeNodeModulesHash = "sha256-41r1ogrpjKte6Rv9mMDF8mNP0KSiawXENzpVFwG0JDI=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
   codexVersion = "0.121.0";
