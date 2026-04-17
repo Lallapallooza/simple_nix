@@ -10,6 +10,19 @@
     };
   };
 
+  # Git -- rebase on pull and copy AuthorDate to CommitterDate during rebase so the
+  # timeline on a rebased branch stays anchored to when the work was actually done.
+  # autoSetupRemote makes the first push of a new branch create and track its remote
+  # counterpart so bare `git push` works instead of demanding `git push -u origin <br>`.
+  programs.git = {
+    enable = true;
+    extraConfig = {
+      pull.rebase = true;
+      rebase.committerDateIsAuthorDate = true;
+      push.autoSetupRemote = true;
+    };
+  };
+
   # Zsh with oh-my-zsh and powerlevel10k prompt
   programs.zsh = {
     enable = true;
