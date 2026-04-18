@@ -17,6 +17,21 @@
   boot.tmp.useTmpfs = true;
   boot.tmp.tmpfsSize = host.tmpfsSize;
 
+  # --- Kernel hang / panic safety net ---
+  # Escape hatch if a driver BUG() wedges the machine (e.g. mt7925e list_add corruption).
+  # Without these a kernel BUG can silently deadlock every CPU waiting on orphaned locks.
+  boot.kernel.sysctl = {
+    "kernel.panic_on_oops" = 1;      # BUG()/oops => panic, don't try to limp on
+    "kernel.panic" = 10;             # reboot 10s after panic
+    "kernel.hardlockup_panic" = 1;   # CPU ignored IRQs >10s => panic via NMI
+    "kernel.softlockup_panic" = 1;   # CPU looped in kernel >20s => panic
+    "kernel.hung_task_panic" = 1;    # task stuck in D-state >120s => panic
+  };
+  # Hardware watchdog -- sp5100_tco on this AMD chipset. If systemd stops
+  # pinging it, the chipset itself resets the box. Only option that survives
+  # the scenario where every CPU is deadlocked and software watchdogs can't run.
+  systemd.watchdog.runtimeTime = "30s";
+
   # AMD CPU microcode updates -- security and stability patches
   hardware.cpu.amd.updateMicrocode = true;
 
