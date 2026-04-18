@@ -142,52 +142,57 @@ update_claude_code() {
 
   echo "  updating ${current} → ${latest}"
 
-  local src_url="https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${latest}.tgz"
+  # 2.1.113+: Anthropic publishes per-platform native binaries to GCS.
+  # Fetch 4 platform hashes in parallel (same scheme as codex's rusty_v8).
+  local gcs_base="https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases"
 
-  echo "  computing source hash..."
-  local src_hash
-  src_hash=$(prefetch_src_hash "$src_url" true || true)
-  if [[ -z "$src_hash" ]]; then
-    echo "  FAILED: could not compute source hash"
-    FAILED+=("$name")
-    return
-  fi
-  echo "  src hash: ${src_hash}"
+  # Snapshot overlay for revert
+  local overlay_backup
+  overlay_backup=$(cat "$OVERLAY_FILE")
 
-  # Save originals for revert
-  local orig_version="$current"
-  local orig_src_hash; orig_src_hash=$(get_overlay_value claudeCodeSrcHash)
-  local orig_dep_hash; orig_dep_hash=$(get_overlay_value claudeCodeNpmDepsHash)
-
-  # Write new version + src hash + fake dep hash
-  set_overlay_value claudeCodeVersion "$latest"
-  set_overlay_value claudeCodeSrcHash "$src_hash"
-  set_overlay_value claudeCodeNpmDepsHash "$FAKE_HASH"
+  declare -A platform_map=(
+    [x86_64-linux]=linux-x64
+    [aarch64-linux]=linux-arm64
+    [x86_64-darwin]=darwin-x64
+    [aarch64-darwin]=darwin-arm64
+  )
 
   if $DRY_RUN; then
-    echo "  [dry-run] skipping dep hash extraction"
-    set_overlay_value claudeCodeVersion "$orig_version"
-    set_overlay_value claudeCodeSrcHash "$orig_src_hash"
-    set_overlay_value claudeCodeNpmDepsHash "$orig_dep_hash"
+    echo "  [dry-run] skipping hash prefetch"
     echo "  UPDATE AVAILABLE: ${current} → ${latest}"
     return
   fi
 
-  local real_hash
-  real_hash=$(extract_fod_hash claude-code)
+  for nix_platform in x86_64-linux aarch64-linux x86_64-darwin aarch64-darwin; do
+    local plat_name="${platform_map[$nix_platform]}"
+    local bin_url="${gcs_base}/${latest}/${plat_name}/claude"
+    echo "  prefetching ${nix_platform}..."
+    local plat_hash
+    plat_hash=$(prefetch_src_hash "$bin_url" false || true)
+    if [[ -z "$plat_hash" ]]; then
+      echo "  FAILED: could not prefetch ${nix_platform}, reverting"
+      echo "$overlay_backup" > "$OVERLAY_FILE"
+      FAILED+=("$name")
+      return
+    fi
+    echo "    ${nix_platform}: ${plat_hash}"
+    sedi "/claudeCodeNativeHashes/,/};/ s|${nix_platform}\([[:space:]]*\)= \"sha256-[^\"]*\";|${nix_platform}\1= \"${plat_hash}\";|" "$OVERLAY_FILE"
+  done
 
-  if [[ -n "$real_hash" ]]; then
-    set_overlay_value claudeCodeNpmDepsHash "$real_hash"
-    echo "  dep hash: ${real_hash}"
-    echo "  UPDATED: ${current} → ${latest}"
-    UPDATED+=("$name")
-  else
-    echo "  FAILED: could not extract dep hash, reverting"
-    set_overlay_value claudeCodeVersion "$orig_version"
-    set_overlay_value claudeCodeSrcHash "$orig_src_hash"
-    set_overlay_value claudeCodeNpmDepsHash "$orig_dep_hash"
-    FAILED+=("$name (hash extraction failed)")
+  set_overlay_value claudeCodeVersion "$latest"
+
+  # Sanity-check: build on this host (x86_64-linux). If the new binary can't
+  # be patchelf'd or the derivation otherwise breaks, revert.
+  echo "  building overlay to verify..."
+  if ! nix build "${FLAKE_DIR}#claude-code" --no-link >/dev/null 2>&1; then
+    echo "  FAILED: overlay build failed, reverting"
+    echo "$overlay_backup" > "$OVERLAY_FILE"
+    FAILED+=("$name (build failed)")
+    return
   fi
+
+  echo "  UPDATED: ${current} → ${latest}"
+  UPDATED+=("$name")
 }
 
 update_gemini_cli() {
