@@ -90,8 +90,11 @@ in
     clang-tools                # clangd LSP
     pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
     tree-sitter                # Treesitter CLI (nvim-treesitter parser compilation)
-    cudaPackages_12_8.cudatoolkit   # Pinned for Blackwell sm_120 -- bump when nixpkgs ships 12.9+
-    cudaPackages_12_8.cudnn         # cuDNN (GPU-accelerated deep learning primitives)
+    cudaPackages_13_2.cudatoolkit     # CUDA 13.2 -- Blackwell sm_120 supported, driver >=580 required
+    cudaPackages_13_2.cudnn           # cuDNN (GPU-accelerated deep learning primitives)
+    cudaPackages_13_2.nsight_compute  # ncu -- kernel-level GPU profiler
+    cudaPackages_13_2.nsight_systems  # nsys -- system-wide GPU/CPU timeline profiler
+    cudaPackages_13_2.cuda_nsight     # nsight -- Eclipse-based CUDA IDE/debugger
 
     # Numerical / math libraries (CPU)
     blis                       # BLAS tuned for Zen (matches/beats MKL on Ryzen)
