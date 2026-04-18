@@ -145,4 +145,29 @@ in {
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
   };
+
+  # Settings live in /var/lib/nordvpn (sqlite), which persists across rebuilds.
+  # Guarded by a marker file so this runs only on fresh state, not every boot.
+  # To re-apply: rm /var/lib/nordvpn/.nix-settings-applied && systemctl start nordvpn-settings
+  systemd.services.nordvpn-settings = {
+    description = "Apply NordVPN settings (first boot only)";
+    after = [ "nordvpn.service" ];
+    requires = [ "nordvpn.service" ];
+    wantedBy = [ "multi-user.target" ];
+    unitConfig.ConditionPathExists = "!/var/lib/nordvpn/.nix-settings-applied";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "nordvpn-apply-settings" ''
+        # Bounded wait for daemon socket, not a long poll.
+        for _ in $(seq 1 10); do
+          ${nordVpnPkg}/bin/nordvpn settings >/dev/null 2>&1 && break
+          sleep 1
+        done
+        ${nordVpnPkg}/bin/nordvpn set technology nordwhisper
+        ${nordVpnPkg}/bin/nordvpn set threatprotectionlite on
+        touch /var/lib/nordvpn/.nix-settings-applied
+      '';
+    };
+  };
 }
