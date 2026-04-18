@@ -16,6 +16,7 @@
   # counterpart so bare `git push` works instead of demanding `git push -u origin <br>`.
   programs.git = {
     enable = true;
+    lfs.enable = true;                 # Git Large File Storage for binaries (images, etc.)
     extraConfig = {
       pull.rebase = true;
       rebase.committerDateIsAuthorDate = true;

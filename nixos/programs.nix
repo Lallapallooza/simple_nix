@@ -7,7 +7,6 @@ in
 {
   # --- Development ---
   programs.direnv.enable = true;        # Auto-load .envrc per-directory environments
-  programs.git.lfs.enable = true;       # Git Large File Storage for binaries (images, etc.)
   programs.nix-ld.enable = true;        # Dynamic linker for non-Nix binaries (Mason, uv, pip wheels)
 
   # --- Gaming ---
