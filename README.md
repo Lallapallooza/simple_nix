@@ -137,6 +137,7 @@ Relog (SDDM) to pick up the new Hyprland session.
 - **JVM**: JDK, Kotlin, kotlin-language-server
 - **Neovim**: NvChad-based, LSPs from nix (clangd, basedpyright, ruff, rust-analyzer, ts_ls, bashls), conform.nvim for formatting. See [`config/nvim/CHEATSHEET.md`](config/nvim/CHEATSHEET.md)
 - **AI coding tools**: claude-code, gemini-cli, codex, opencode are managed via a [version overlay](#auto-updating-cli-tools) that stays ahead of nixpkgs
+- **AMD uProf** (optional, AMD CPUs only) -- microarchitectural profiler: IBS sampling, Zen PMU counters, cache/mem/branch/TLB events, power timechart. See [AMD uProf setup](#amd-uprof-optional)
 
 ## Theme
 
@@ -192,6 +193,68 @@ Applied via:
 - **hyprpanel** -- custom `config.json` with Ayu Dark palette
 - **hyprlock** -- blurred background with Ayu Dark text/input colors
 - **Hyprland** -- border colors use accent orange
+
+## AMD uProf (optional)
+
+AMD uProf isn't in nixpkgs -- AMD gates every download behind a EULA form, so no fetchurl is possible. The overlay at `nixos/overlays/amduprof.nix` handles it via `requireFile`: you download the tarball once, add it to the Nix store, set a flag, rebuild.
+
+Gated by `amduprof` in `host.nix`. Leave it `false` (default) and `install.sh` works on any machine without the tarball.
+
+### One-time setup
+
+```bash
+# 1. Download AMDuProf_Linux_x64_<version>.tar.bz2 (~300 MB) from:
+#      https://www.amd.com/en/developer/uprof.html
+#    (The version pinned in the overlay is 5.2.606 -- bump `uprofVersion`
+#     there if you grab a newer release.)
+
+# 2. Compute its hash and paste into `uprofHash` in
+#    nixos/overlays/amduprof.nix:
+nix hash file ~/Downloads/AMDuProf_Linux_x64_5.2.606.tar.bz2
+
+# 3. Add the tarball to the Nix store:
+nix store add-file ~/Downloads/AMDuProf_Linux_x64_5.2.606.tar.bz2
+
+# 4. Enable the flag in nixos/host.nix:
+#      amduprof = true;
+
+# 5. Rebuild
+./install.sh
+```
+
+Afterwards `AMDuProfCLI`, `AMDuProfPcm`, and `AMDuProfCfg` are on PATH. Quick check:
+
+```bash
+AMDuProfCLI info                                        # system/CPU info
+AMDuProfCLI collect --config tbp -o /tmp/uprof ./myapp  # sample a binary
+AMDuProfCLI report  -i /tmp/uprof/AMDuProf-*            # text report
+```
+
+No `msr` kernel-module changes are needed for user-space profiling on the default NixOS sysctls. If a specific counter errors with "Permission denied", run that single invocation with `sudo` -- CAP_SYS_ADMIN bypasses the default paranoid level. If the wrapper complains about a missing `.so`, add the library to `fhsDeps` in the overlay and rebuild.
+
+### Instruction Based Sampling (IBS) and `perf_event_paranoid`
+
+IBS profile scopes require `kernel.perf_event_paranoid <= 1` for non-root users. NixOS defaults to `2`, so `AMDuProfCLI collect` with an IBS config fails with:
+
+```
+ERROR: For non-root users, following perf_event_paranoid values are valid
+for Instruction Based Sampling:
+        <= 1 : for all Instruction Based Sampling profile scopes.
+```
+
+Temporary (resets on reboot):
+
+```bash
+sudo sysctl -w kernel.perf_event_paranoid=1
+```
+
+Persistent, add to `nixos/configuration.nix`:
+
+```nix
+boot.kernel.sysctl."kernel.perf_event_paranoid" = 1;
+```
+
+Check the current value with `cat /proc/sys/kernel/perf_event_paranoid`. Alternatively, run `AMDuProfCLI collect` under `sudo` -- root bypasses the paranoid check entirely.
 
 ## Secure Boot (dual-boot with Windows)
 

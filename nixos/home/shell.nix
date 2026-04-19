@@ -17,7 +17,7 @@
   programs.git = {
     enable = true;
     lfs.enable = true;                 # Git Large File Storage for binaries (images, etc.)
-    extraConfig = {
+    settings = {
       pull.rebase = true;
       rebase.committerDateIsAuthorDate = true;
       push.autoSetupRemote = true;

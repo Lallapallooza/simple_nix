@@ -123,6 +123,11 @@ in
     scalene                    # Python CPU+memory+GPU, Python vs native split
     bpftrace                   # eBPF dynamic tracing (JSON output)
     uftrace                    # Function-graph tracer (C/C++/Rust)
+    likwid                     # Zen PMU counters: cache/mem/FLOPS/AVX, topology-aware
+  ] ++ lib.optionals (host.amduprof or false) [
+    amduprof                   # AMD uProf CLI (Zen microarch + IBS + timechart)
+    amduprof-pcm               # AMD uProf per-core memory/cache counters
+  ] ++ [
 
     # AI coding tools
     claude-code gemini-cli codex opencode rtk glow beads

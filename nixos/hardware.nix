@@ -30,7 +30,7 @@
   # Hardware watchdog -- sp5100_tco on this AMD chipset. If systemd stops
   # pinging it, the chipset itself resets the box. Only option that survives
   # the scenario where every CPU is deadlocked and software watchdogs can't run.
-  systemd.watchdog.runtimeTime = "30s";
+  systemd.settings.Manager.RuntimeWatchdogSec = "30s";
 
   # AMD CPU microcode updates -- security and stability patches
   hardware.cpu.amd.updateMicrocode = true;

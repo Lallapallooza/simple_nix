@@ -38,6 +38,7 @@
   nixpkgs.overlays = [
     (import ./overlays/cli-tools.nix)
     (import ./overlays/hyprpanel.nix)
+    (import ./overlays/amduprof.nix)
   ];
   nixpkgs.config.allowUnfree = true;
 
