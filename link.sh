@@ -11,7 +11,7 @@ link_skills() {
   echo "==> Symlinking vs-core skills..."
   mkdir -p "$HOME/.claude/skills" "$HOME/.agents/skills"
   local count=0
-  for skill_dir in "$REPO"/skills/vs-core-*/; do
+  for skill_dir in "$REPO"/skills/skills/vs-core-*/; do
     [[ -d "$skill_dir" ]] || continue
     local skill_name
     skill_name="$(basename "$skill_dir")"
