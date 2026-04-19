@@ -28,9 +28,9 @@ let
   geminiCliNpmDepsHash = "sha256-6UnLSmKdnXwEXgGcyRTibDkEqvlRr75e3fRld0v6T2s=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.4.11";
-  opencodeSrcHash = "sha256-jlxR2BODV8wk0sP4Kkyza7Zr5I+Q003gldCfp2eYOt8=";
-  opencodeNodeModulesHash = "sha256-rF+l0Hho0QEvMS5jaImhMlhKjjf1R66X20R6lEZcZeg=";
+  opencodeVersion = "1.14.18";
+  opencodeSrcHash = "sha256-wEjksPEPzEe2BCySqjorMXrbnBWNCp+YAaCiZWV2ZIc=";
+  opencodeNodeModulesHash = "sha256-TGvMa2PaMyXdc/dt/Vqv8rYMgIZiEVc4/FZ6+7F3Ff8=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
   codexVersion = "0.121.0";
