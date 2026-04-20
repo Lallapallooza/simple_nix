@@ -88,6 +88,9 @@ in
     # C/C++ / CUDA
     gnumake cmake gcc clang
     clang-tools                # clangd LSP
+    llvmPackages_latest.llvm   # LLVM tools (opt, llvm-ar, llvm-nm, etc.)
+    llvmPackages_latest.lld    # LLVM linker
+    llvmPackages_latest.lldb   # LLVM debugger
     pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
     tree-sitter                # Treesitter CLI (nvim-treesitter parser compilation)
     cudaPackages_13_2.cudatoolkit     # CUDA 13.2 -- Blackwell sm_120 supported, driver >=580 required
