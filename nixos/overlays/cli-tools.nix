@@ -30,7 +30,7 @@ let
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
   opencodeVersion = "1.14.18";
   opencodeSrcHash = "sha256-wEjksPEPzEe2BCySqjorMXrbnBWNCp+YAaCiZWV2ZIc=";
-  opencodeNodeModulesHash = "sha256-TGvMa2PaMyXdc/dt/Vqv8rYMgIZiEVc4/FZ6+7F3Ff8=";
+  opencodeNodeModulesHash = "sha256-KZ/tfg84DNa56VglMWmExE3R219BXwxSmhKnLiQWOV4=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
   codexVersion = "0.121.0";
@@ -131,6 +131,26 @@ in {
       node_modules = old.node_modules.overrideAttrs {
         inherit src;
         outputHash = opencodeNodeModulesHash;
+        # prettier is a root-workspace devDep; --filter . is needed so bun install includes it
+        buildPhase = ''
+          runHook preBuild
+
+          bun install \
+            --cpu="*" \
+            --frozen-lockfile \
+            --filter ./packages/app \
+            --filter ./packages/desktop \
+            --filter ./packages/opencode \
+            --filter . \
+            --ignore-scripts \
+            --no-progress \
+            --os="*"
+
+          bun --bun ./nix/scripts/canonicalize-node-modules.ts
+          bun --bun ./nix/scripts/normalize-bun-binaries.ts
+
+          runHook postBuild
+        '';
       };
       env = old.env // {
         OPENCODE_VERSION = version;
