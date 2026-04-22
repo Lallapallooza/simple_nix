@@ -1819,6 +1819,11 @@
   #              seen the warning, or if you are unsure what this all means.
   typeset -g POWERLEVEL9K_INSTANT_PROMPT=verbose
 
+  # Emit OSC 133 semantic marks so terminals (kitty >= 0.24, iTerm2) can recognise
+  # prompt/command/output boundaries. Enables kitty's mouse_select_command_output,
+  # scroll_to_prompt, show_last_command_output, etc.
+  typeset -g POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
+
   # Hot reload allows you to change POWERLEVEL9K options after Powerlevel10k has been initialized.
   # For example, you can type POWERLEVEL9K_BACKGROUND=red and see your prompt turn red. Hot reload
   # can slow down prompt by 1-2 milliseconds, so it's better to keep it turned off unless you
