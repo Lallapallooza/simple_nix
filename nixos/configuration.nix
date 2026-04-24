@@ -61,6 +61,10 @@
   # --- Shell ---
   programs.zsh.enable = true;
 
+  # Auto-load kheaders so BCC tools (offcputime, profile, ...) can find kernel
+  # headers via /sys/kernel/kheaders.tar.xz without needing sudo to modprobe.
+  boot.kernelModules = [ "kheaders" ];
+
   # --- User ---
   users.users.${host.username} = {
     isNormalUser = true;
