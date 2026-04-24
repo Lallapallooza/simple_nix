@@ -141,7 +141,8 @@ in {
       RuntimeDirectoryMode = "0750";
       Group = "nordvpn";
     };
-    wantedBy = [ "multi-user.target" ];
+    # On-demand: start with `sudo systemctl start nordvpn`, stop with `sudo systemctl stop nordvpn`.
+    # Not wanted by any target, so it does not autostart at boot.
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
   };
@@ -153,7 +154,8 @@ in {
     description = "Apply NordVPN settings (first boot only)";
     after = [ "nordvpn.service" ];
     requires = [ "nordvpn.service" ];
-    wantedBy = [ "multi-user.target" ];
+    # Pulled in whenever nordvpn.service starts; condition below makes it a no-op after first run.
+    wantedBy = [ "nordvpn.service" ];
     unitConfig.ConditionPathExists = "!/var/lib/nordvpn/.nix-settings-applied";
     serviceConfig = {
       Type = "oneshot";
