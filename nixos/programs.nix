@@ -1,4 +1,4 @@
-{ lib, pkgs, agenix, host, ... }:
+{ config, lib, pkgs, agenix, host, ... }:
 
 let
   mathLibs = with pkgs; [ blis openblas fftw gsl suitesparse eigen ];
@@ -127,6 +127,7 @@ in
     bpftrace                   # eBPF dynamic tracing (JSON output)
     uftrace                    # Function-graph tracer (C/C++/Rust)
     likwid                     # Zen PMU counters: cache/mem/FLOPS/AVX, topology-aware
+    config.boot.kernelPackages.cpupower   # CPU frequency/governor control (kernel-matched)
   ] ++ lib.optionals (host.amduprof or false) [
     amduprof                   # AMD uProf CLI (Zen microarch + IBS + timechart)
     amduprof-pcm               # AMD uProf per-core memory/cache counters
