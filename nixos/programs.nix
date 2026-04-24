@@ -86,12 +86,13 @@ in
     jdk kotlin kotlin-language-server
 
     # C/C++ / CUDA
-    gnumake cmake gcc clang
+    gnumake cmake ninja gcc clang
     clang-tools                # clangd LSP
     llvmPackages_latest.llvm   # LLVM tools (opt, llvm-ar, llvm-nm, etc.)
     llvmPackages_latest.lld    # LLVM linker
     llvmPackages_latest.lldb   # LLVM debugger
     pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
+    doxygen                    # API doc generator (uses graphviz for call/dep graphs)
     tree-sitter                # Treesitter CLI (nvim-treesitter parser compilation)
     cudaPackages_13_2.cudatoolkit     # CUDA 13.2 -- Blackwell sm_120 supported, driver >=580 required
     cudaPackages_13_2.cudnn           # cuDNN (GPU-accelerated deep learning primitives)
