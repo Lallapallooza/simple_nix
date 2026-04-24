@@ -12,6 +12,14 @@
   # PAM service for hyprlock -- without this, hyprlock can't authenticate to unlock
   security.pam.services.hyprlock = {};
 
+  # --- Sudo ---
+  # NixOS does not include /etc/sudoers.d by default; the directive below makes
+  # sudo read drop-in rules from it. Used by scripts/setup_profiling.sh to install
+  # a session-scoped NOPASSWD rule for BCC tools, removed on --reset.
+  security.sudo.extraConfig = ''
+    @includedir /etc/sudoers.d
+  '';
+
   # --- SSH ---
   services.openssh = {
     enable = true;
