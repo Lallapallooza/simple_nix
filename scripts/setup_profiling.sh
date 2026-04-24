@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
     echo "Usage: $0 [--reset]"
     echo "  (no args)  enable profiling mode (relaxed perf sysctls + performance governor)"
-    echo "  --reset    restore defaults (restrictive sysctls + schedutil governor)"
+    echo "  --reset    restore defaults (restrictive sysctls; leaves amd-pstate-epp at performance)"
     exit 1
 }
 
@@ -28,6 +28,5 @@ else
     sudo sysctl -w kernel.perf_event_paranoid=2
     sudo sysctl -w kernel.perf_event_mlock_kb=516
     sudo sysctl -w kernel.kptr_restrict=1
-    sudo cpupower frequency-set -g powersave
-    echo balance_performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference > /dev/null
+    sudo cpupower frequency-set -g performance
 fi
