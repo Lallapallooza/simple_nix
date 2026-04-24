@@ -126,6 +126,7 @@ in
     memray                     # Python memory profiler (Bloomberg)
     scalene                    # Python CPU+memory+GPU, Python vs native split
     bpftrace                   # eBPF dynamic tracing (JSON output)
+    bcc                        # BCC toolkit: offcputime, profile, execsnoop, etc.
     uftrace                    # Function-graph tracer (C/C++/Rust)
     likwid                     # Zen PMU counters: cache/mem/FLOPS/AVX, topology-aware
     config.boot.kernelPackages.cpupower   # CPU frequency/governor control (kernel-matched)
