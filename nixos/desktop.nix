@@ -59,7 +59,6 @@
     VISUAL = "nvim";
     VIEWER = "${host.homeDir}/.config/mc/bat-viewer.sh";
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";   # Don't prune shader cache -- reduces stutter in games
-    RTK_TELEMETRY_DISABLED = "1";     # Disable RTK telemetry
   };
 
   environment.shellAliases = {

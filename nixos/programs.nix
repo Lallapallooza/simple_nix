@@ -136,7 +136,7 @@ in
   ] ++ [
 
     # AI coding tools
-    claude-code gemini-cli codex opencode rtk glow beads
+    claude-code gemini-cli codex opencode glow beads
 
     # LSP servers (for neovim)
     bash-language-server

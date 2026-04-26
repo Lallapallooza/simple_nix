@@ -19,15 +19,6 @@ sudo nixos-rebuild switch -L --flake "$REPO/nixos#$_hostname"
 # Ensure new packages are in PATH for the current session
 export PATH="/run/current-system/sw/bin:$PATH"
 
-echo "==> Initializing RTK..."
-if command -v rtk &>/dev/null; then
-  rtk init -g
-  rtk init -g --opencode
-  rtk init -g --gemini
-else
-  echo "    SKIP: rtk not found"
-fi
-
 echo "==> Symlinking configs..."
 "$REPO/link.sh"
 
