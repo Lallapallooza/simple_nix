@@ -15,5 +15,5 @@ return {
     enable = true,
     update_root = true,
   },
-  git = { ignore = true },
+  git = { ignore = false },
 }
