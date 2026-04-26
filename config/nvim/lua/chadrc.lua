@@ -218,4 +218,18 @@ M.base46 = {
   },
 }
 
+M.ui = {
+  statusline = {
+    modules = {
+      cursor = function()
+        local sep_style = require("nvconfig").ui.statusline.separator_style
+        local separators = require("nvchad.stl.utils").separators
+        local sep_l = ((type(sep_style) == "table" and sep_style) or separators[sep_style]).left
+
+        return "%#St_pos_sep#" .. sep_l .. "%#St_pos_icon# %#St_pos_text# %l/%L:%v "
+      end,
+    },
+  },
+}
+
 return M
