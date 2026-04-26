@@ -25,7 +25,7 @@ SUDOERS_DROPIN="/etc/sudoers.d/99-profiling-bcc"
 if [[ "$mode" == "enable" ]]; then
     sudo sysctl -w kernel.nmi_watchdog=0
     sudo sysctl -w kernel.perf_event_paranoid=0            # unprivileged perf on kernel (samply/perf/flamegraph)
-    sudo sysctl -w kernel.perf_event_mlock_kb=65536
+    sudo sysctl -w kernel.perf_event_mlock_kb=1048576
     sudo sysctl -w kernel.kptr_restrict=0                  # needed for kernel stack symbolication
     sudo cpupower frequency-set -g performance
     echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference > /dev/null
