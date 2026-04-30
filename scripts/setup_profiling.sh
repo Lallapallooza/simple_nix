@@ -63,6 +63,19 @@ if [[ "$mode" == "enable" ]]; then
                || cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)
     sudo cpupower frequency-set --min "${base_khz}" --max "${base_khz}" > /dev/null
 
+    # Disable deep CPU idle states (anything beyond C1). When a benchmark cell
+    # uses only some cores for several seconds, idle cores fall into C2/C3 on
+    # Zen 5; wake from C3 is on the order of 350 us per core (see the cpuidle
+    # latency file). The next cell that touches those cores then pays that
+    # wake cost on every dispatch, making sub-us workloads measure 100 us+.
+    # Keeping cores in POLL/C1 only costs a few watts of idle power but keeps
+    # cross-cell timings comparable. Direct sysfs writes work without an
+    # interactive sudo prompt the way `cpupower idle-set` requires.
+    for f in /sys/devices/system/cpu/cpu*/cpuidle/state[!01]/disable; do
+        [[ -e "$f" ]] || continue
+        echo 1 | sudo tee "$f" > /dev/null
+    done
+
     # NOPASSWD drop-in for BCC tools. List every link in the symlink chain so
     # sudo's command matching works regardless of which hop it resolves to.
     user=$(id -un)
@@ -135,6 +148,10 @@ else
     fi
     sudo systemctl start irqbalance.service 2>/dev/null || true
     sudo cpupower frequency-set --min 0 --max 0 > /dev/null 2>&1 || true
+    for f in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
+        [[ -e "$f" ]] || continue
+        echo 0 | sudo tee "$f" > /dev/null
+    done
 
     sudo rm -f "$SUDOERS_DROPIN"
     echo "removed $SUDOERS_DROPIN (if present)"
