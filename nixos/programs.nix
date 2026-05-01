@@ -129,6 +129,7 @@ in
     bcc                        # BCC toolkit: offcputime, profile, execsnoop, etc.
     uftrace                    # Function-graph tracer (C/C++/Rust)
     likwid                     # Zen PMU counters: cache/mem/FLOPS/AVX, topology-aware
+    hwloc                      # Hardware topology (lstopo, hwloc-bind, hwloc-info)
     config.boot.kernelPackages.cpupower   # CPU frequency/governor control (kernel-matched)
   ] ++ lib.optionals (host.amduprof or false) [
     amduprof                   # AMD uProf CLI (Zen microarch + IBS + timechart)
