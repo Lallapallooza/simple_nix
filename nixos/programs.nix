@@ -92,6 +92,9 @@ in
     llvmPackages_latest.lld    # LLVM linker
     llvmPackages_latest.lldb   # LLVM debugger
     pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
+    conan                      # C/C++ package manager
+    vcpkg                      # Microsoft C/C++ package manager
+    vcpkg-tool                 # vcpkg standalone tool
     doxygen                    # API doc generator (uses graphviz for call/dep graphs)
     tree-sitter                # Treesitter CLI (nvim-treesitter parser compilation)
     cudaPackages_13_2.cudatoolkit     # CUDA 13.2 -- Blackwell sm_120 supported, driver >=580 required
