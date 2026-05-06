@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.129";
+  claudeCodeVersion = "2.1.131";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-SvQA+nTIiR1psM2eNwTvSRM996GdXGZFb6D16EJ24WA=";
-    aarch64-linux  = "sha256-vh4DfnYuSbKPlvIBu9D7ghU3JeFhIvbjNiPIX8jxq8g=";
-    x86_64-darwin  = "sha256-Z3bIH00GKemtIWaovSSWe3KrFXtKpxOT1zqnyjLtBdo=";
-    aarch64-darwin = "sha256-+tKsdcOM7SxX0EbmSSfJ7khG9ax16jv48FJexmQ4wQk=";
+    x86_64-linux   = "sha256-mvFbkwL/3j+oPj6kpBzdABWDAc2LrcdVVnqOkUnxw2w=";
+    aarch64-linux  = "sha256-CRnN9RLKZzs4IwiCtFiAG3jpJI60cjg2Mc/BLY0NVc8=";
+    x86_64-darwin  = "sha256-ob0seCw/lhmH19ZFb3Wz+lOMxCXxVzkIhQr+3LA4yl8=";
+    aarch64-darwin = "sha256-zGBmsNt7tCPHUxY2ZUL3caQZI5madqV3GvrYfdZdzq4=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
