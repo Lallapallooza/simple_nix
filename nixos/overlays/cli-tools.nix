@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.131";
+  claudeCodeVersion = "2.1.132";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-mvFbkwL/3j+oPj6kpBzdABWDAc2LrcdVVnqOkUnxw2w=";
-    aarch64-linux  = "sha256-CRnN9RLKZzs4IwiCtFiAG3jpJI60cjg2Mc/BLY0NVc8=";
-    x86_64-darwin  = "sha256-ob0seCw/lhmH19ZFb3Wz+lOMxCXxVzkIhQr+3LA4yl8=";
-    aarch64-darwin = "sha256-zGBmsNt7tCPHUxY2ZUL3caQZI5madqV3GvrYfdZdzq4=";
+    x86_64-linux   = "sha256-YjCG9lz9nDr/DIpRJQh/iuoxAKqSvz8FM7K+peXWno0=";
+    aarch64-linux  = "sha256-JyZmae2lrmEVg34GIwlz9WX5mw8lwJrYau7UBMP3+Uc=";
+    x86_64-darwin  = "sha256-GVP1CFPtpMN039VY8c9ioTqZyBSq5ztCoH09mkn+cns=";
+    aarch64-darwin = "sha256-LOa5AH849crw0RauNdWfGm1A6QKuf58ZrKbsSDaXt2Q=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -23,9 +23,9 @@ let
   claudeCodeGcsBase = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases";
 
   # -- gemini-cli (buildNpmPackage, GitHub source) ---------------------
-  geminiCliVersion = "0.41.1";
-  geminiCliSrcHash = "sha256-8T13ROsE6NVR120NbFThADjSYy1PApAXqdHzclSA2yc=";
-  geminiCliNpmDepsHash = "sha256-YHo3mAG9UlEg8J5SCzCu2YhKdlz7lFPon5SweKWQ8rk=";
+  geminiCliVersion = "0.41.2";
+  geminiCliSrcHash = "sha256-4jwEviWYzan97pVn0RWfWU4XS8c27L4ZJUwa2iGlFxY=";
+  geminiCliNpmDepsHash = "sha256-4znN1YR3AX2SKeCJjUS8cm6WGcOGPXI27xrQCotBjgQ=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
   opencodeVersion = "1.14.39";
