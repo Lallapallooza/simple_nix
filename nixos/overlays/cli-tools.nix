@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.132";
+  claudeCodeVersion = "2.1.133";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-YjCG9lz9nDr/DIpRJQh/iuoxAKqSvz8FM7K+peXWno0=";
-    aarch64-linux  = "sha256-JyZmae2lrmEVg34GIwlz9WX5mw8lwJrYau7UBMP3+Uc=";
-    x86_64-darwin  = "sha256-GVP1CFPtpMN039VY8c9ioTqZyBSq5ztCoH09mkn+cns=";
-    aarch64-darwin = "sha256-LOa5AH849crw0RauNdWfGm1A6QKuf58ZrKbsSDaXt2Q=";
+    x86_64-linux   = "sha256-0N3wrubkQmpwVxnl1HFuPOPLOPml/gbrbV/872yYgyo=";
+    aarch64-linux  = "sha256-3McnX5GYMX4HPDKavhdIJ2BKgB6b+1d6ANhu/PT4Fnw=";
+    x86_64-darwin  = "sha256-sWdYaAw7seD4qGfjH534To3yRzsGk+gR8LKbRl0uZMM=";
+    aarch64-darwin = "sha256-0480REkRyGxz8yvrgoIQCLJr6In6DQyvcIVYDPVzfhQ=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -28,14 +28,14 @@ let
   geminiCliNpmDepsHash = "sha256-4znN1YR3AX2SKeCJjUS8cm6WGcOGPXI27xrQCotBjgQ=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.14.39";
-  opencodeSrcHash = "sha256-PeLARnAFsbdrm9gsDzAdJcP74QBT8IgJupu8Z4xYbPo=";
-  opencodeNodeModulesHash = "sha256-PuNcDe3jFDlAvnZS+PRmm9IXrjO2RqiLgosojdDc5e8=";
+  opencodeVersion = "1.14.41";
+  opencodeSrcHash = "sha256-F3085YQFlVB+xF8lzFcN4PgAbIqQeFzSUFjeV8U7py4=";
+  opencodeNodeModulesHash = "sha256-TGqXubIphJXipnoSrL3rHTkTKqwg/E7KU/7S2CSJScE=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.128.0";
-  codexSrcHash = "sha256-v2W0eslPOPHxHX76+bnkE/f4y+MnQuopeOoAC5X16TA=";
-  codexCargoHash = "sha256-3NQ4UCfBpANhyoJJatd8m31cEugsd42Ye2BXuzlKC0c=";
+  codexVersion = "0.129.0";
+  codexSrcHash = "sha256-IvBeuDiP1vMzCGVxi4CWKcYajP+IkNIyHmREO5gz2dU=";
+  codexCargoHash = "sha256-H4iqXfcT9mvU6O4j5TybfyKEpx522iaggS68AC1jbU8=";
   codexLibrustyV8Version = "146.4.0";
   codexLibrustyV8Hashes = {
     x86_64-linux = "sha256-5ktNmeSuKTouhGJEqJuAF4uhA4LBP7WRwfppaPUpEVM=";
