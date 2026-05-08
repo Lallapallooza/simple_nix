@@ -52,6 +52,13 @@
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
 
+  # Allow non-root users to read GPU performance counters (ncu, CUPTI PC sampling).
+  # Default gates this behind root to mitigate CVE-2018-6260 (GPU counter side-channel
+  # between users on a shared GPU); single-user workstation, threat model doesn't apply.
+  boot.extraModprobeConfig = lib.mkIf host.nvidia ''
+    options nvidia NVreg_RestrictProfilingToAdminUsers=0
+  '';
+
   # VA-API hardware video acceleration via NVIDIA
   environment.variables.LIBVA_DRIVER_NAME = lib.mkIf host.nvidia "nvidia";
 
