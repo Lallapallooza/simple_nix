@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.133";
+  claudeCodeVersion = "2.1.138";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-0N3wrubkQmpwVxnl1HFuPOPLOPml/gbrbV/872yYgyo=";
-    aarch64-linux  = "sha256-3McnX5GYMX4HPDKavhdIJ2BKgB6b+1d6ANhu/PT4Fnw=";
-    x86_64-darwin  = "sha256-sWdYaAw7seD4qGfjH534To3yRzsGk+gR8LKbRl0uZMM=";
-    aarch64-darwin = "sha256-0480REkRyGxz8yvrgoIQCLJr6In6DQyvcIVYDPVzfhQ=";
+    x86_64-linux   = "sha256-w8Vv+8Es8W5AwzaHyf5jYe0lDDWp4XGNDDjUkEn1+MM=";
+    aarch64-linux  = "sha256-aT7MpBpi1Y/uZgiEvZgspc3qtbJ3kl/N/ogM3wL5hnE=";
+    x86_64-darwin  = "sha256-2Z06ev1jhBlDkGsR7YeRsO5H/lz5VgGouAXCCQABT1Q=";
+    aarch64-darwin = "sha256-dZ0jzmJhk8ibyLNcXGyoqeM7nC5QTuFD5M0RmYh3QJc=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -33,9 +33,9 @@ let
   opencodeNodeModulesHash = "sha256-TGqXubIphJXipnoSrL3rHTkTKqwg/E7KU/7S2CSJScE=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.129.0";
-  codexSrcHash = "sha256-IvBeuDiP1vMzCGVxi4CWKcYajP+IkNIyHmREO5gz2dU=";
-  codexCargoHash = "sha256-H4iqXfcT9mvU6O4j5TybfyKEpx522iaggS68AC1jbU8=";
+  codexVersion = "0.130.0";
+  codexSrcHash = "sha256-YeUeYbzUMUx0lhIKdtPa8vUYK2Cj1hmbLb68Y80r71o=";
+  codexCargoHash = "sha256-cpkj7H/jkKGbfJ92Ty9peqfxibFw2aWWG64tmgeG+2o=";
   codexLibrustyV8Version = "146.4.0";
   codexLibrustyV8Hashes = {
     x86_64-linux = "sha256-5ktNmeSuKTouhGJEqJuAF4uhA4LBP7WRwfppaPUpEVM=";
