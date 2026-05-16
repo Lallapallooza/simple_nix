@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.138";
+  claudeCodeVersion = "2.1.143";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-w8Vv+8Es8W5AwzaHyf5jYe0lDDWp4XGNDDjUkEn1+MM=";
-    aarch64-linux  = "sha256-aT7MpBpi1Y/uZgiEvZgspc3qtbJ3kl/N/ogM3wL5hnE=";
-    x86_64-darwin  = "sha256-2Z06ev1jhBlDkGsR7YeRsO5H/lz5VgGouAXCCQABT1Q=";
-    aarch64-darwin = "sha256-dZ0jzmJhk8ibyLNcXGyoqeM7nC5QTuFD5M0RmYh3QJc=";
+    x86_64-linux   = "sha256-91/cP/nZzUlLhhkvnjSbXFxtOXDtTVzVx7MwxaKx3MQ=";
+    aarch64-linux  = "sha256-MujtxKXDxB0YYHx10bjnvsZDMwwD4ma+Rqw7QaRGxOs=";
+    x86_64-darwin  = "sha256-vI/0zgK3ZaAzgI+1lvlSIwbL5cUNITRO2HUsCJZvNiw=";
+    aarch64-darwin = "sha256-JwHGz9aEg/j68DFqG6ZIGhRVqQZFraF58MSNjDbXIu8=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -23,14 +23,14 @@ let
   claudeCodeGcsBase = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases";
 
   # -- gemini-cli (buildNpmPackage, GitHub source) ---------------------
-  geminiCliVersion = "0.41.2";
-  geminiCliSrcHash = "sha256-4jwEviWYzan97pVn0RWfWU4XS8c27L4ZJUwa2iGlFxY=";
-  geminiCliNpmDepsHash = "sha256-4znN1YR3AX2SKeCJjUS8cm6WGcOGPXI27xrQCotBjgQ=";
+  geminiCliVersion = "0.42.0";
+  geminiCliSrcHash = "sha256-QYSzJdyjJ5SvPkI/uf/wu8MdM76W+djai6zD38IJpos=";
+  geminiCliNpmDepsHash = "sha256-hKNEJ/MAseYs8WLr36h40pYv+5nef8EPhZIfmPKYJPY=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.14.41";
-  opencodeSrcHash = "sha256-F3085YQFlVB+xF8lzFcN4PgAbIqQeFzSUFjeV8U7py4=";
-  opencodeNodeModulesHash = "sha256-TGqXubIphJXipnoSrL3rHTkTKqwg/E7KU/7S2CSJScE=";
+  opencodeVersion = "1.15.3";
+  opencodeSrcHash = "sha256-OKQR76q7trKQTvlMxH8tG2jNnRtBe3YeFfvNw8c3+8I=";
+  opencodeNodeModulesHash = "sha256-cvExCHKkxerR4lyXavcbXqPXNVOQIJ173UOV1mp5dhk=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
   codexVersion = "0.130.0";
