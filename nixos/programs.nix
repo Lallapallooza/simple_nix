@@ -78,7 +78,7 @@ in
     python3 uv ruff
 
     # Rust
-    rustc cargo rust-analyzer
+    rustc cargo rust-analyzer cargo-nextest
 
     # Go
     go gopls
