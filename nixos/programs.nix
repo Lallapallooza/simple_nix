@@ -93,7 +93,8 @@ in
     llvmPackages_latest.lld    # LLVM linker
     llvmPackages_latest.lldb   # LLVM debugger
     pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
-    sccache                    # Compiler cache for C/C++/CUDA (via CMake launcher) and Rust (via RUSTC_WRAPPER)
+    sccache                    # Compiler cache for C/C++/CUDA (via CMake launcher). Skipped for Rust -- conflicts with incremental compilation.
+    mold                       # Fast parallel linker; opt-in per-project via -fuse-ld=mold or .cargo/config.toml
     conan                      # C/C++ package manager
     vcpkg                      # Microsoft C/C++ package manager
     vcpkg-tool                 # vcpkg standalone tool
@@ -217,10 +218,11 @@ in
       (lib.makeSearchPathOutput "dev" "share/pkgconfig" mathLibs)
     ];
 
-    # sccache: route Cargo and CMake-driven C/C++/CUDA through the cache by default.
+    # sccache: route CMake-driven C/C++/CUDA through the cache by default.
+    # Rust is intentionally NOT wrapped -- sccache disables Cargo incremental
+    # compilation, which usually hurts iterative dev cycles more than caching helps.
     # Raw make/autotools projects are not covered (would need CC="sccache clang",
     # which breaks some configure scripts) -- opt in per-project when needed.
-    RUSTC_WRAPPER = "sccache";
     CMAKE_C_COMPILER_LAUNCHER = "sccache";
     CMAKE_CXX_COMPILER_LAUNCHER = "sccache";
     CMAKE_CUDA_COMPILER_LAUNCHER = "sccache";
