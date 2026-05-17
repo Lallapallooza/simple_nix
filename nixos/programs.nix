@@ -2,12 +2,16 @@
 
 let
   mathLibs = with pkgs; [ blis openblas fftw gsl suitesparse eigen llvmPackages_latest.openmp ];
+  # Non-Nix desktop/game binaries dlopen these at runtime (via nix-ld):
+  # Wayland + xkbcommon (display/input), Vulkan + libglvnd (GPU loaders), alsa-lib (audio), udev (devices).
+  desktopRuntimeLibs = with pkgs; [ alsa-lib wayland libxkbcommon udev vulkan-loader libglvnd ];
 in
 
 {
   # --- Development ---
   programs.direnv.enable = true;        # Auto-load .envrc per-directory environments
   programs.nix-ld.enable = true;        # Dynamic linker for non-Nix binaries (Mason, uv, pip wheels)
+  programs.nix-ld.libraries = desktopRuntimeLibs;
 
   # --- Gaming ---
   programs.gamemode.enable = true;      # CPU governor + scheduler optimization while gaming
@@ -202,10 +206,11 @@ in
     playerctl                  # MPRIS media player control (play/pause/next)
     seahorse                   # GUI for managing gnome-keyring passwords
     wdisplays                  # Wayland display/monitor configuration GUI
-  ] ++ (map lib.getDev mathLibs);
+  ] ++ (map lib.getDev (mathLibs ++ desktopRuntimeLibs));
 
-  # Expose math lib headers + libs + pkg-config globally so gcc/clang and
-  # pkg-config resolve them without a per-project nix-shell.
+  # Math libs go on CPATH + LIBRARY_PATH + pkg-config so raw `gcc -lblas` works.
+  # Desktop-runtime libs are pkg-config only -- their typical consumers
+  # (CMake, meson) resolve them via pkg-config rather than -I/-l flags.
   # Trade-off: these env vars leak into unrelated user-session compilations;
   # switch to a shell.nix per project if that causes surprises.
   environment.variables = {
@@ -214,8 +219,8 @@ in
     CPATH = lib.makeSearchPathOutput "dev" "include" mathLibs;
     LIBRARY_PATH = lib.makeLibraryPath mathLibs;
     PKG_CONFIG_PATH = lib.concatStringsSep ":" [
-      (lib.makeSearchPathOutput "dev" "lib/pkgconfig" mathLibs)
-      (lib.makeSearchPathOutput "dev" "share/pkgconfig" mathLibs)
+      (lib.makeSearchPathOutput "dev" "lib/pkgconfig" (mathLibs ++ desktopRuntimeLibs))
+      (lib.makeSearchPathOutput "dev" "share/pkgconfig" (mathLibs ++ desktopRuntimeLibs))
     ];
 
     # sccache: route CMake-driven C/C++/CUDA through the cache by default.
