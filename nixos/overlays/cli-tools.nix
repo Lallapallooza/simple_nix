@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.143";
+  claudeCodeVersion = "2.1.145";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-91/cP/nZzUlLhhkvnjSbXFxtOXDtTVzVx7MwxaKx3MQ=";
-    aarch64-linux  = "sha256-MujtxKXDxB0YYHx10bjnvsZDMwwD4ma+Rqw7QaRGxOs=";
-    x86_64-darwin  = "sha256-vI/0zgK3ZaAzgI+1lvlSIwbL5cUNITRO2HUsCJZvNiw=";
-    aarch64-darwin = "sha256-JwHGz9aEg/j68DFqG6ZIGhRVqQZFraF58MSNjDbXIu8=";
+    x86_64-linux   = "sha256-s/+8Emib/oE4nWV3eH/OpMq4G9O2u6m3Gec3cLYtcg4=";
+    aarch64-linux  = "sha256-da1h1pDXlEDIK1hBRE4bQsquVXNq83yX3Q4GjvIM45A=";
+    x86_64-darwin  = "sha256-wj3FZiFCedBwj0ISJh8CPY5j1a9a75Fjjr/cCQs+M94=";
+    aarch64-darwin = "sha256-No3NlwnIVTT2cwcefMjrVCK8/zZ/ub31ziXZYZqrfvU=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -28,14 +28,14 @@ let
   geminiCliNpmDepsHash = "sha256-hKNEJ/MAseYs8WLr36h40pYv+5nef8EPhZIfmPKYJPY=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.15.3";
-  opencodeSrcHash = "sha256-OKQR76q7trKQTvlMxH8tG2jNnRtBe3YeFfvNw8c3+8I=";
-  opencodeNodeModulesHash = "sha256-cvExCHKkxerR4lyXavcbXqPXNVOQIJ173UOV1mp5dhk=";
+  opencodeVersion = "1.15.5";
+  opencodeSrcHash = "sha256-HZiqia9QzkJMfRQ6bzFBsiGXNHv1WFLUdwhekE+rXM8=";
+  opencodeNodeModulesHash = "sha256-wd4MvgGSBJ9Bn17w/O8UjgdqKhAhnzTx5RBqo0qMHvI=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.130.0";
-  codexSrcHash = "sha256-YeUeYbzUMUx0lhIKdtPa8vUYK2Cj1hmbLb68Y80r71o=";
-  codexCargoHash = "sha256-cpkj7H/jkKGbfJ92Ty9peqfxibFw2aWWG64tmgeG+2o=";
+  codexVersion = "0.132.0";
+  codexSrcHash = "sha256-T+iPhi0/h6+tIGZy04e8l8xjxUBH/aUQ21pXbunLYxM=";
+  codexCargoHash = "sha256-UHgiDC/YgVgXlK+6aw8in+rOClz9D92VgKbbd+yEWHs=";
   codexLibrustyV8Version = "146.4.0";
   codexLibrustyV8Hashes = {
     x86_64-linux = "sha256-5ktNmeSuKTouhGJEqJuAF4uhA4LBP7WRwfppaPUpEVM=";
