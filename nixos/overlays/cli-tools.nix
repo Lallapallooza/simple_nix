@@ -7,12 +7,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.145";
+  claudeCodeVersion = "2.1.146";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-s/+8Emib/oE4nWV3eH/OpMq4G9O2u6m3Gec3cLYtcg4=";
-    aarch64-linux  = "sha256-da1h1pDXlEDIK1hBRE4bQsquVXNq83yX3Q4GjvIM45A=";
-    x86_64-darwin  = "sha256-wj3FZiFCedBwj0ISJh8CPY5j1a9a75Fjjr/cCQs+M94=";
-    aarch64-darwin = "sha256-No3NlwnIVTT2cwcefMjrVCK8/zZ/ub31ziXZYZqrfvU=";
+    x86_64-linux   = "sha256-gl1TATgPH19GbFJo3iWgYpJ75liTj8HWMM+gLFIbgYU=";
+    aarch64-linux  = "sha256-ryUzTHomMqUxs04/TA1pdjuZcUnTHV8NdI5EgTdYgG8=";
+    x86_64-darwin  = "sha256-a8FPReKOpsjDQiDIgye7cqOMX5eLmqRNDLNDdcv3iDc=";
+    aarch64-darwin = "sha256-sW9GaiIToEzs8a2VggFlUUikn0KVITTmrhgiV8z8CPM=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -28,20 +28,20 @@ let
   geminiCliNpmDepsHash = "sha256-hKNEJ/MAseYs8WLr36h40pYv+5nef8EPhZIfmPKYJPY=";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.15.5";
-  opencodeSrcHash = "sha256-HZiqia9QzkJMfRQ6bzFBsiGXNHv1WFLUdwhekE+rXM8=";
-  opencodeNodeModulesHash = "sha256-wd4MvgGSBJ9Bn17w/O8UjgdqKhAhnzTx5RBqo0qMHvI=";
+  opencodeVersion = "1.15.7";
+  opencodeSrcHash = "sha256-fk8GDVE+bQfOkZCQ1YEc3V7YIXDHfNC/srcZs/MrE38=";
+  opencodeNodeModulesHash = "sha256-GYzTEvZC6M4DHvy3j7u6dXQ7mdnVloAseKYdIXAYJoo=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.132.0";
-  codexSrcHash = "sha256-T+iPhi0/h6+tIGZy04e8l8xjxUBH/aUQ21pXbunLYxM=";
-  codexCargoHash = "sha256-UHgiDC/YgVgXlK+6aw8in+rOClz9D92VgKbbd+yEWHs=";
-  codexLibrustyV8Version = "146.4.0";
+  codexVersion = "0.133.0";
+  codexSrcHash = "sha256-RTxhhZjZ/64N60pmbNVzLwcSBomn67pPDpOjkL6RPUw=";
+  codexCargoHash = "sha256-J4wvPn4lSTSsJrTG56vkhJe2F2b+fUvJLEd+qKQ9LUg=";
+  codexLibrustyV8Version = "147.4.0";
   codexLibrustyV8Hashes = {
-    x86_64-linux = "sha256-5ktNmeSuKTouhGJEqJuAF4uhA4LBP7WRwfppaPUpEVM=";
-    aarch64-linux = "sha256-2/FlsHyBvbBUvARrQ9I+afz3vMGkwbW0d2mDpxBi7Ng=";
-    x86_64-darwin = "sha256-YwzSQPG77NsHFBfcGDh6uBz2fFScHFFaC0/Pnrpke7c=";
-    aarch64-darwin = "sha256-v+LJvjKlbChUbw+WWCXuaPv2BkBfMQzE4XtEilaM+Yo=";
+    x86_64-linux = "sha256-Cd3vbFEZKv/wVBExoO+cAPgxhdI5HaqxgDgqOr82rJU=";
+    aarch64-linux = "sha256-lMPw/eAFFAT8obaR8opJbXjbgw58+0maBEyxpeOllFU=";
+    x86_64-darwin = "sha256-+ppR8dMhVTSZL0PPar+DlKZ0K+E5N7WfdXXfBTYel+Y=";
+    aarch64-darwin = "sha256-fnR0DD7woOj8DiaKJYYSPpg0D+lDVmjNwSiPrvtzYq4=";
   };
 
   # Compare versions: true if a > b (by sort -V)
