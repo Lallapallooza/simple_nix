@@ -1,4 +1,4 @@
-{ lib, pkgs, host, ... }:
+{ lib, pkgs, host, cliToolsOverlay, ... }:
 
 {
   imports = [
@@ -36,7 +36,7 @@
   };
 
   nixpkgs.overlays = [
-    (import ./overlays/cli-tools.nix)
+    cliToolsOverlay
     (import ./overlays/hyprpanel.nix)
     (import ./overlays/amduprof.nix)
   ];

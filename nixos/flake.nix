@@ -13,15 +13,23 @@
 
     # secure boot signing for systemd-boot
     lanzaboote = { url = "github:nix-community/lanzaboote/v1.0.0"; inputs.nixpkgs.follows = "nixpkgs"; };
+
+    # Go TUI viewer for the Beads issue tracker (Dicklesworthstone fork).
+    # br (Rust port) is built from source in overlays/cli-tools.nix instead.
+    beads_viewer = { url = "github:Dicklesworthstone/beads_viewer"; inputs.nixpkgs.follows = "nixpkgs"; };
+
+    # Nightly Rust toolchain. Needed by br: transitive dep `fsqlite-types`
+    # uses `#![feature(portable_simd)]` which is nightly-only.
+    fenix = { url = "github:nix-community/fenix"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
-  outputs = { nixpkgs, home-manager, agenix, lanzaboote, ... }:
+  outputs = { nixpkgs, home-manager, agenix, lanzaboote, beads_viewer, fenix, ... }:
     let
       _host = import ./host.nix;
       host = _host // { homeDir = "/home/${_host.username}"; };
 
       # Shared across NixOS system and standalone packages output (avoids duplication)
-      cliToolsOverlay = import ./overlays/cli-tools.nix;
+      cliToolsOverlay = import ./overlays/cli-tools.nix { inherit fenix; };
 
       requiredFields = [ "username" "hostname" "timezone" "defaultLocale" "regionalLocale"
                          "tmpfsSize" "steamScaling" "cursorSize" "nvidia" "repoDir" "autoUpgrade" ];
@@ -32,7 +40,10 @@
   {
     nixosConfigurations.${host.hostname} = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit agenix host; };
+      specialArgs = {
+        inherit agenix host cliToolsOverlay;
+        bv = beads_viewer.packages.x86_64-linux.bv;
+      };
       modules = [
         home-manager.nixosModules.home-manager
         agenix.nixosModules.default
@@ -51,7 +62,7 @@
         overlays = [ cliToolsOverlay ];
       };
     in {
-      inherit (pkgs) claude-code opencode codex;
+      inherit (pkgs) claude-code opencode codex br;
     };
   };
 }
