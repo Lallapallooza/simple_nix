@@ -5,6 +5,14 @@ let
   # Non-Nix desktop/game binaries dlopen these at runtime (via nix-ld):
   # Wayland + xkbcommon (display/input), Vulkan + libglvnd (GPU loaders), alsa-lib (audio), udev (devices).
   desktopRuntimeLibs = with pkgs; [ alsa-lib wayland libxkbcommon udev vulkan-loader libglvnd ];
+  # wgpu-utils also ships parsers, examples, xtask helpers and a bug-repro that
+  # would clutter PATH. Expose only the two general-purpose CLIs. wgpu-info's
+  # wrapper references its target by absolute store path, so symlinks suffice.
+  nagaTools = pkgs.runCommand "naga-${pkgs.wgpu-utils.version}" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.wgpu-utils}/bin/naga $out/bin/naga
+    ln -s ${pkgs.wgpu-utils}/bin/wgpu-info $out/bin/wgpu-info
+  '';
 in
 
 {
@@ -124,6 +132,20 @@ in
 
     # Cloud tools
     awscli2                    # AWS CLI v2
+
+    # Graphics & shader tooling
+    renderdoc                  # Frame debugger/profiler (Vulkan/OpenGL/GLES)
+    vulkan-tools               # vulkaninfo, vkcube -- enumerate ICDs/devices, smoke-test rendering
+    vulkan-tools-lunarg        # vkconfig -- toggle Vulkan layers and settings
+    vulkan-validation-layers   # VK_LAYER_KHRONOS_validation -- catch API misuse at runtime
+    vulkan-extension-layer     # Emulate optional Vulkan extensions for testing
+    spirv-tools                # spirv-as/dis/val/opt/link -- assemble, validate, optimize SPIR-V
+    spirv-cross                # Translate SPIR-V back to GLSL/HLSL/MSL, plus reflection
+    glslang                    # glslangValidator -- reference GLSL/HLSL to SPIR-V compiler
+    shaderc                    # glslc -- GLSL/HLSL to SPIR-V compiler (Google)
+    shader-slang               # slangc -- Khronos Slang shading language compiler
+    directx-shader-compiler    # dxc -- HLSL to SPIR-V/DXIL
+    nagaTools                  # naga + wgpu-info from wgpu-utils (gfx-rs/wgpu shader translator + adapter probe)
 
     # Profiling & tracing (CPU, memory, dynamic tracing across C++/Rust/Python)
     perf                       # Linux sampling profiler (foundation)
