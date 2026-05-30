@@ -52,6 +52,26 @@
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
 
+  # NVIDIA does not return its free buffer pool to the GPU under Wayland
+  # compositors, so Hyprland's VRAM climbs across a session and never drops
+  # when other apps need it. NVIDIA's own profile key GLVidHeapReuseRatio=0
+  # caps that pool. Match argv[0] basename (Hyprland, as UWSM launches it)
+  # plus the NixOS wrapper names as fallbacks so the rule binds regardless
+  # of how the driver reads the process name.
+  environment.etc."nvidia/nvidia-application-profiles-rc.d/50-limit-free-buffer-pool-in-wayland-compositors.json" =
+    lib.mkIf host.nvidia {
+      text = builtins.toJSON {
+        rules = map (name: {
+          pattern = { feature = "procname"; matches = name; };
+          profile = "Limit Free Buffer Pool On Wayland Compositors";
+        }) [ "Hyprland" ".Hyprland-wrapped" ".Hyprland-wrapp" ];
+        profiles = [{
+          name = "Limit Free Buffer Pool On Wayland Compositors";
+          settings = [{ key = "GLVidHeapReuseRatio"; value = 0; }];
+        }];
+      };
+    };
+
   # Allow non-root users to read GPU performance counters (ncu, CUPTI PC sampling).
   # Default gates this behind root to mitigate CVE-2018-6260 (GPU counter side-channel
   # between users on a shared GPU); single-user workstation, threat model doesn't apply.
