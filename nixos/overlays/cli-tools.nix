@@ -8,12 +8,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.162";
+  claudeCodeVersion = "2.1.165";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-lHpJsN6GiPanSm51PCR3H/Pd0Xsqba6F82ME7FFOYdE=";
-    aarch64-linux  = "sha256-7KKmA9/rw0JqhGnL55f535UkVzi8HCDshC/I+Ar0AQ0=";
-    x86_64-darwin  = "sha256-U/J0m/JOWoCyOwF9CHf2HJiUo8BiIhQVFbN6lMYFHUE=";
-    aarch64-darwin = "sha256-LUB90qYyQ6yQD2QzFYm5/NKaIVmnMokHCvaF9AhaF9I=";
+    x86_64-linux   = "sha256-00sMqt0l64LY4IyhA7ZIKRtN7+9TGT9XKEenNuKq9Ng=";
+    aarch64-linux  = "sha256-/y4GCCf58CFKdxMyBsRTmmR37B9P3bSSsCJVoGeWQv0=";
+    x86_64-darwin  = "sha256-PLUMs8mgZb0tiCUM6z8mR84W+J84Te3h994mdvpSavA=";
+    aarch64-darwin = "sha256-Ge1TbdDpTa3j+MScPG3e/yKwb11chrMPHIjuuaBPReU=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -24,9 +24,9 @@ let
   claudeCodeGcsBase = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.15.13";
-  opencodeSrcHash = "sha256-+zHwO5ZY8D2s1gZzxoYI7c8yWmQSduPwv4MoFruhhPA=";
-  opencodeNodeModulesHash = "sha256-lDobNmjO+kAqjhYq+vCVa9v+H7DABlxwSJ0ILP4kgrA=";
+  opencodeVersion = "1.16.0";
+  opencodeSrcHash = "sha256-6HLwQmbxyO46+yoHAdQoOlCusReNUJ5Vscjv15k3SK8=";
+  opencodeNodeModulesHash = "sha256-4yjQlxN+U4CKwA/hE8gACuvA4bBeTrX0ACVBIK4UQCg=";
 
   # -- br / beads_rust (buildRustPackage, GitHub source) ---------------
   # Upstream's flake.nix is broken (crane vendors Cargo.lock at the wrong
