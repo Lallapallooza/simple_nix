@@ -211,6 +211,10 @@ in {
         name = "codex-${version}-vendor";
         hash = codexCargoHash;
       };
+      # nixpkgs' inherited postPatch assumes older Cargo.toml content
+      # (`lto = "fat"`). 0.139.0 uses `lto = "thin"`; the env overrides
+      # below handle release profile settings without patching sources.
+      postPatch = "";
       env = old.env // {
         RUSTY_V8_ARCHIVE = prev.fetchurl {
           name = "librusty_v8-${codexLibrustyV8Version}";
