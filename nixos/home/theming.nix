@@ -1,4 +1,4 @@
-{ pkgs, host, ... }:
+{ pkgs, host, lib, ... }:
 
 {
   home.pointerCursor = {
@@ -22,6 +22,11 @@
       package = pkgs.papirus-icon-theme;
     };
   };
+
+  # GTK apps and Plasma's settings tools rewrite ~/.gtkrc-2.0 as a plain file,
+  # so HM's backup step collides with a stale .gtkrc-2.0.bak on the next rebuild
+  # and aborts activation. Let HM own the file: overwrite in place, no backup.
+  home.file."${host.homeDir}/.gtkrc-2.0".force = lib.mkForce true;
 
   # --- Qt Theming (uses Plasma 6 Breeze Dark -- already installed as fallback DE) ---
   qt = {
