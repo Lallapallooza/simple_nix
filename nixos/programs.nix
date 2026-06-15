@@ -194,6 +194,7 @@ in
 
     # Desktop apps
     brave vscode vlc spotify telegram-desktop slack yt-dlp qbittorrent
+    (if host.nvidia then blender.override { cudaSupport = true; } else blender)   # 3D suite; Cycles GPU rendering via OptiX/CUDA on nvidia
     mangohud                   # Real-time FPS/GPU/CPU overlay for games
 
     # VPN
