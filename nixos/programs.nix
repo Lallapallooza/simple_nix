@@ -214,6 +214,7 @@ in
     hyprlock                   # Lock screen
     hypridle                   # Idle management (triggers lock/suspend)
     wl-clipboard               # Wayland clipboard (wl-copy/wl-paste)
+    socat                      # Hyprland event-socket listener (hyprpanel monitor-wake reload)
     grimblast                  # Screenshot helper (wraps grim+slurp+wl-copy)
     grim                       # Screenshot capture
     slurp                      # Region selection for screenshots
