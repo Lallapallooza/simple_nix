@@ -138,6 +138,7 @@ Relog (SDDM) to pick up the new Hyprland session.
 - **Neovim**: NvChad-based, LSPs from nix (clangd, basedpyright, ruff, rust-analyzer, ts_ls, bashls), conform.nvim for formatting. See [`config/nvim/CHEATSHEET.md`](config/nvim/CHEATSHEET.md)
 - **AI coding tools**: claude-code, codex, opencode are managed via a [version overlay](#auto-updating-cli-tools) that stays ahead of nixpkgs
 - **AMD uProf** (optional, AMD CPUs only) -- microarchitectural profiler: IBS sampling, Zen PMU counters, cache/mem/branch/TLB events, power timechart. See [AMD uProf setup](#amd-uprof-optional)
+- **NVIDIA Nsight Graphics** (optional, NVIDIA GPUs only) -- headless frame debugger and GPU profiler CLI for Vulkan/OpenGL/DirectX. See [Nsight Graphics setup](#nvidia-nsight-graphics-optional)
 
 ## Theme
 
@@ -255,6 +256,44 @@ boot.kernel.sysctl."kernel.perf_event_paranoid" = 1;
 ```
 
 Check the current value with `cat /proc/sys/kernel/perf_event_paranoid`. Alternatively, run `AMDuProfCLI collect` under `sudo` -- root bypasses the paranoid check entirely.
+
+## NVIDIA Nsight Graphics (optional)
+
+Nsight Graphics isn't in nixpkgs (only `nsight_compute` and `nsight_systems` are). NVIDIA gates the download behind a developer login, so no fetchurl is possible. The overlay at `nixos/overlays/nsight-graphics.nix` handles it via `requireFile`: it extracts the Makeself installer's `pkg/` tree and wraps the headless CLI in a `buildFHSEnv`. The GUI (`ngfx-ui`) is intentionally skipped.
+
+Gated by `nsightGraphics` in `host.nix`. Leave it `false` (default) and `install.sh` works on any machine without the installer.
+
+### One-time setup
+
+```bash
+# 1. Download NVIDIA_Nsight_Graphics_<version>-linux_x64.run (~450 MB) from:
+#      https://developer.nvidia.com/nsight-graphics
+#    (The version pinned in the overlay is 2026.2.0.26134 -- bump
+#     `nsightVersion` there if you grab a newer release.)
+
+# 2. Compute its hash and paste into `nsightHash` in
+#    nixos/overlays/nsight-graphics.nix:
+nix hash file ~/Downloads/NVIDIA_Nsight_Graphics_2026.2.0.26134-linux_x64.run
+
+# 3. Add the installer to the Nix store:
+nix store add-file ~/Downloads/NVIDIA_Nsight_Graphics_2026.2.0.26134-linux_x64.run
+
+# 4. Enable the flag in nixos/host.nix:
+#      nsightGraphics = true;
+
+# 5. Rebuild
+./install.sh
+```
+
+Afterwards `ngfx`, `ngfx-capture`, and `ngfx-replay` are on PATH. Quick check:
+
+```bash
+ngfx --version                        # tool version
+ngfx --help-all                       # general + per-activity options
+ngfx --activity "GPU Trace Profiler" --exe ./myapp --output-dir /tmp/trace
+```
+
+The NVIDIA driver libraries reach the sandbox through `/run/opengl-driver`, which `buildFHSEnv` mounts automatically. If the wrapper complains about a missing `.so`, add the library to `fhsDeps` in the overlay and rebuild.
 
 ## Secure Boot (dual-boot with Windows)
 

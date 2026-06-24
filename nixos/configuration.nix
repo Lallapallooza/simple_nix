@@ -39,6 +39,7 @@
     cliToolsOverlay
     (import ./overlays/hyprpanel.nix)
     (import ./overlays/amduprof.nix)
+    (import ./overlays/nsight-graphics.nix)
   ];
   nixpkgs.config.allowUnfree = true;
 

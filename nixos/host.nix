@@ -13,4 +13,5 @@
   repoDir = "/home/vitalii/code/simple_nix";   # local clone path (for auto-upgrade) -- must match username above
   autoUpgrade = true;                # nightly rebuild from local clone (git pull + nixos-rebuild)
   amduprof = true;                   # AMD uProf -- requires one-time tarball setup, see README
+  nsightGraphics = true;             # NVIDIA Nsight Graphics CLI -- requires one-time installer setup, see README
 }

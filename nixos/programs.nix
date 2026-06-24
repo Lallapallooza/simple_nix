@@ -171,6 +171,10 @@ in
   ] ++ lib.optionals (host.amduprof or false) [
     amduprof                   # AMD uProf CLI (Zen microarch + IBS + timechart)
     amduprof-pcm               # AMD uProf per-core memory/cache counters
+  ] ++ lib.optionals (host.nsightGraphics or false) [
+    ngfx                       # NVIDIA Nsight Graphics CLI (frame capture, GPU Trace)
+    ngfx-capture               # Capture a frame from a target app (headless)
+    ngfx-replay                # Replay a captured frame (headless)
   ] ++ [
 
     # AI coding tools
