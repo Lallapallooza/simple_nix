@@ -8,12 +8,12 @@ let
   # -- claude-code (prebuilt native binary from Anthropic GCS) ---------
   # 2.1.113+ ships a Bun-compiled single-file binary (no cli.js). We fetch
   # the per-platform binary directly and wrap it; buildNpmPackage is bypassed.
-  claudeCodeVersion = "2.1.181";
+  claudeCodeVersion = "2.1.190";
   claudeCodeNativeHashes = {
-    x86_64-linux   = "sha256-Nf/U6dmoY5XQuk4F+LI78Ji/6rlel96s1lN5CdEyTpw=";
-    aarch64-linux  = "sha256-E5P5k1M+CNXJYkVQR1Cn/P43SQpfRO7DWwvqw9cJ2rk=";
-    x86_64-darwin  = "sha256-NTeYvNxJpSpmZkU3DhxIqE/oN9k7+dlUwZM43KcmDd0=";
-    aarch64-darwin = "sha256-xNgzsEYGzvm26rOtJV7S4USPh96ivAD/Ws93tX326U0=";
+    x86_64-linux   = "sha256-BoTihRfMeFq40Z/rXa0zgeq0q8l79vzge8U03IgECyc=";
+    aarch64-linux  = "sha256-5zBSA+fXimv+y5T3lzsO5KcaO6Z8gCjJiyk89XGQC2g=";
+    x86_64-darwin  = "sha256-TspIQxpDxVQMU2V5ZL5gTzAdOMArJEynwF2hj4S7XIU=";
+    aarch64-darwin = "sha256-H6WVKcIzkU/dnUKBanTs8wDu+hTD0RjU7LovDxb8V0E=";
   };
   claudeCodeNativePlatform = {
     x86_64-linux   = "linux-x64";
@@ -24,8 +24,8 @@ let
   claudeCodeGcsBase = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.17.8";
-  opencodeSrcHash = "sha256-iReCFIJeJIOIs95v0ReVR/X1PnT5dSnR9O0TniyvPR8=";
+  opencodeVersion = "1.17.9";
+  opencodeSrcHash = "sha256-OWfI2dp0PeNShVZMzEdm69EtxWX7UwmyPmX02SfrjP8=";
   opencodeNodeModulesHash = "sha256-ERywlcNEF9EUW3JDGH8987g+GAj76RylUtegqMvStyg=";
 
   # -- br / beads_rust (buildRustPackage, GitHub source) ---------------
@@ -42,9 +42,9 @@ let
   brNightlySha = "sha256-ccIyMJknpRkaU9pLkFC4E9j0XxMa50GT4CYhwGvs8/U=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.141.0";
-  codexSrcHash = "sha256-1ZOaZlwAkH6DJpxlInfbXpaqmsbOIOGrFoj2dYehBMA=";
-  codexCargoHash = "sha256-bQPeRKTrNYeGCO20hpu+F37sScFOGr1EPOVf1E0FU+4=";
+  codexVersion = "0.142.0";
+  codexSrcHash = "sha256-F8wlv0vSuljNFDgIzoeuVxvD0dk90z2FBtpBTMih7AA=";
+  codexCargoHash = "sha256-fvEFNE12J6zaLZrN6oQB8X+jXoKPSCWrL17Sl28+7/c=";
   codexLibrustyV8Version = "149.2.0";
   codexLibrustyV8Hashes = {
     x86_64-linux = "sha256-iu2YY323533Iv7i7R1nsW95HLQv3lD9Y4OYqNQlFxVk=";
