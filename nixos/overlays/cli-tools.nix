@@ -24,9 +24,9 @@ let
   claudeCodeGcsBase = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases";
 
   # -- opencode (stdenvNoCC + Bun, GitHub source) ----------------------
-  opencodeVersion = "1.17.9";
-  opencodeSrcHash = "sha256-OWfI2dp0PeNShVZMzEdm69EtxWX7UwmyPmX02SfrjP8=";
-  opencodeNodeModulesHash = "sha256-ERywlcNEF9EUW3JDGH8987g+GAj76RylUtegqMvStyg=";
+  opencodeVersion = "1.17.11";
+  opencodeSrcHash = "sha256-ZgmRHoI3rxsSM10sA4cZu/FxqwmgawQvlW3eykXQsqQ=";
+  opencodeNodeModulesHash = "sha256-JWT//c5TuF0Tlz51RbUVIE8YYRdhb/WoDJb2XqGosfc=";
 
   # -- br / beads_rust (buildRustPackage, GitHub source) ---------------
   # Upstream's flake.nix is broken (crane vendors Cargo.lock at the wrong
@@ -123,6 +123,16 @@ in {
         # prettier is a root-workspace devDep; --filter . is needed so bun install includes it
         buildPhase = ''
           runHook preBuild
+
+          # packages/app pins ghostty-web to the moving github branch ref `#main`.
+          # bun --frozen-lockfile re-resolves `#main` to the current branch HEAD,
+          # which drifts from the commit recorded in bun.lock and aborts the build.
+          # Rewrite the ref to the exact commit the lockfile records so the frozen
+          # install resolves to a stable, reproducible tree.
+          ghostty_commit=$(grep -oE 'anomalyco/ghostty-web#[0-9a-f]+' bun.lock | head -1 | sed 's/.*#//')
+          if [ -n "$ghostty_commit" ]; then
+            sed -i "s|ghostty-web#main|ghostty-web#$ghostty_commit|" packages/app/package.json
+          fi
 
           bun install \
             --cpu="*" \
