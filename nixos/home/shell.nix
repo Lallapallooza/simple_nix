@@ -5,8 +5,8 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."github.com" = {
-      identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_github";
+    settings."github.com" = {
+      IdentityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_github";
     };
   };
 

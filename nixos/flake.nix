@@ -12,7 +12,7 @@
     agenix = { url = "github:ryantm/agenix"; inputs.nixpkgs.follows = "nixpkgs"; };
 
     # secure boot signing for systemd-boot
-    lanzaboote = { url = "github:nix-community/lanzaboote/v1.0.0"; inputs.nixpkgs.follows = "nixpkgs"; };
+    lanzaboote = { url = "github:nix-community/lanzaboote/v1.1.0"; inputs.nixpkgs.follows = "nixpkgs"; };
 
     # Go TUI viewer for the Beads issue tracker (Dicklesworthstone fork).
     # br (Rust port) is built from source in overlays/cli-tools.nix instead.
