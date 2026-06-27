@@ -5,7 +5,7 @@
 { lib, pkgs, host, ... }:
 
 let
-  version = "4.5.0";
+  version = "5.1.0";
 
   # -- CLI + daemon (FHS-wrapped) ----------------------------------------
   nordVpnBase = pkgs.stdenv.mkDerivation {
@@ -13,7 +13,7 @@ let
     inherit version;
     src = pkgs.fetchurl {
       url = "https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/n/nordvpn/nordvpn_${version}_amd64.deb";
-      hash = "sha256-bekJOzhLGwFsYRuPagANwUduyCufaU4XoJPwWoBniR8=";
+      hash = "sha256-10Cfjjy5AQ88ZdFRLyjnR2aL6roGroa0/SuFu2nuD8k=";
     };
     buildInputs = with pkgs; [ libxml2 libidn2 libnl libcap_ng sqlite ];
     nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook stdenv.cc.cc.lib ];
@@ -72,7 +72,7 @@ let
     inherit version;
     src = pkgs.fetchurl {
       url = "https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/n/nordvpn-gui/nordvpn-gui_${version}_amd64.deb";
-      hash = "sha256-V1eOPudlBhVH5cSjp9qtpL6zJDSq4e9MQ8YZXnMcH84=";
+      hash = "sha256-IOLLy0ThhcDFTm+su0R6LIPNbsmmAqFkBXs5KbvXtjY=";
     };
     nativeBuildInputs = [ pkgs.dpkg ];
     dontConfigure = true;
