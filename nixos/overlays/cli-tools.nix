@@ -42,8 +42,8 @@ let
   brNightlySha = "sha256-ccIyMJknpRkaU9pLkFC4E9j0XxMa50GT4CYhwGvs8/U=";
 
   # -- codex (buildRustPackage, GitHub source) -------------------------
-  codexVersion = "0.142.3";
-  codexSrcHash = "sha256-dxkyaWpgzqpAVFojDYQ6JpMPNBIX+d7xjIyLic4Cs8A=";
+  codexVersion = "0.142.4";
+  codexSrcHash = "sha256-cYkdLy0+KMjcx0k7IDACsiTK3ZZks6cmwbeDMheN6WY=";
   codexCargoHash = "sha256-1gDiCB3Nf/0aIm+EoL3g9C0xbCi3cv6TfH5VytjJpOY=";
   codexLibrustyV8Version = "149.2.0";
   codexLibrustyV8Hashes = {
