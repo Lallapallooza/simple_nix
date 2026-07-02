@@ -1,0 +1,35 @@
+diff --git a/src/desktop/view/Window.cpp b/src/desktop/view/Window.cpp
+index 7fb62c5..d25c584 100644
+--- a/src/desktop/view/Window.cpp
++++ b/src/desktop/view/Window.cpp
+@@ -2074,9 +2074,16 @@ void CWindow::mapWindow() {
+             PWORKSPACE = pWorkspace;
+ 
+             m_workspace = pWorkspace;
+-            m_monitor   = pWorkspace->m_monitor;
++            auto PWORKSPACEMONITOR = pWorkspace->m_monitor.lock();
++            if (!PWORKSPACEMONITOR) {
++                Log::logger->log(Log::WARN, "mapWindow: workspace {} had no valid monitor, moving it to {}", pWorkspace->m_id, PMONITOR->m_name);
++                pWorkspace->m_monitor = PMONITOR;
++                PWORKSPACEMONITOR     = PMONITOR;
++            }
++
++            m_monitor = PWORKSPACEMONITOR;
+ 
+-            if (m_monitor.lock()->m_activeSpecialWorkspace && !pWorkspace->m_isSpecialWorkspace)
++            if (PWORKSPACEMONITOR->m_activeSpecialWorkspace && !pWorkspace->m_isSpecialWorkspace)
+                 workspaceSilent = true;
+ 
+             if (!workspaceSilent) {
+diff --git a/src/helpers/Monitor.cpp b/src/helpers/Monitor.cpp
+index 5d1a7ef..300d621 100644
+--- a/src/helpers/Monitor.cpp
++++ b/src/helpers/Monitor.cpp
+@@ -456,6 +456,7 @@ void CMonitor::onDisconnect(bool destroy) {
+     if (!BACKUPMON) {
+         Log::logger->log(Log::WARN, "Unplugged last monitor, entering an unsafe state. Good luck my friend.");
+         g_pCompositor->enterUnsafeState();
++        BACKUPMON = g_pCompositor->m_unsafeOutput.lock();
+     }
+ 
+     m_enabled             = false;

@@ -13,13 +13,6 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;   # Latest kernel for newest hardware support
   boot.kernelParams = lib.mkIf host.nvidia [
     "nvidia_drm.fbdev=1"   # NVIDIA framebuffer (Wayland)
-    # Hold PCIe ports out of low-power states so the DisplayPort link is not
-    # dropped when the monitor sleeps or is switched off. On this NVIDIA box a
-    # DP power-off makes the driver report the connector gone; Hyprland then
-    # tears down its last output and segfaults on the unsafe-state map path.
-    # Keeping the link up removes the disconnect at the source. Documented
-    # NVIDIA DisplayPort workaround; trades a little idle power for stability.
-    "pcie_port_pm=off"
   ];
 
   # tmpfs on RAM -- faster builds, reduces SSD writes
