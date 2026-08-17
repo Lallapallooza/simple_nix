@@ -97,13 +97,30 @@ xwayland { force_zero_scaling = true }
 cursor { no_hardware_cursors = true }
 ```
 
-### 3. Build
+### 3. Set your Wayle location
+
+```bash
+cp config/wayle/local.toml.example ~/.config/wayle/local.toml
+# edit the `location` line to your city
+```
+
+Required, not optional -- a missing `local.toml` fails wayle's config load
+entirely and it silently falls back to built-in defaults for the whole bar
+(wrong modules, wrong layout), not just missing weather. `link.sh` symlinks
+`~/.config/wayle/` before this file exists, so do this before first login.
+
+### 4. Build
 
 ```bash
 ./install.sh
 ```
 
 Relog (SDDM) to pick up the new Hyprland session.
+
+On a machine with less than ~8GB RAM: the `br` overlay package (built from
+source) can OOM-kill the build with the default `max-jobs = "auto"`. Consider
+setting `max-jobs = 1` in `configuration.nix` and creating a temporary
+swapfile before your first `./install.sh` if you hit this.
 
 ### Known issues
 

@@ -6,8 +6,15 @@
 # NOTE: import paths resolve relative to the symlink at ~/.config/wayle/, not to
 # config.toml's real location in this repo -- so the live file sits next to the
 # symlink and is never inside the working tree. That is deliberate: anything
-# here (e.g. your location) stays out of git by construction. A missing
-# local.toml is not an error, so a fresh clone still starts.
+# here (e.g. your location) stays out of git by construction.
+#
+# COPY THIS FILE before first boot: on wayle 0.7.0, a missing local.toml makes
+# the `imports` in config.toml fail, which fails config.toml itself, which
+# makes wayle silently fall back to its built-in defaults for the *entire*
+# bar (wrong module list, no workspaces/CPU/RAM/storage modules, no weather --
+# not just a missing weather location). Confirmed via
+# ~/.local/state/wayle/wayle-shell.*.log:
+#   "using defaults, config.toml failed: cannot import '.../local.toml'"
 #
 # Values here are overridden by anything set in config.toml, so only put keys
 # here that config.toml leaves unset.
