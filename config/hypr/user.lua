@@ -32,8 +32,8 @@
 --   Super+/              = keybind cheatsheet
 --   Super+N              = notification history (full bodies)
 --   Super+Ctrl+S         = move window to scratchpad
---   Print                = screenshot + annotate (flameshot)
---   Super+Shift+S        = screenshot region (grimblast, no UI)
+--   Print                = screenshot region
+--   Super+Shift+S        = screenshot region
 --   Super+Print          = screenshot full monitor
 
 
@@ -78,6 +78,8 @@ hl.on("hyprland.start", function()
     -- hl.exec_cmd("hypridle")  -- autolock disabled
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
+
+    hl.exec_cmd("flameshot")   -- tray daemon; `flameshot gui` exits 1 without it
 
     -- Polkit agent (for admin password prompts)
     hl.exec_cmd("lxqt-policykit-agent")
@@ -277,12 +279,8 @@ hl.bind(mainMod .. " + M",         hl.dsp.exec_cmd(configDir .. "/toggle-layout.
 hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("kitty --class=notif-log sh -c 'wayle notify list | less -R'"))
 
 -- Screenshots
--- Print opens flameshot's annotation UI (draw/blur/arrow, then copy or save).
--- grimblast stays on the other two keys as the headless path: it is a single
--- grim+slurp call with no Qt surface, so it still works if flameshot's overlay
--- misbehaves under this monitor's 1.666667 fractional scale.
 hl.bind("Print",                   hl.dsp.exec_cmd("flameshot gui"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("grimblast copysave area"))
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("grimblast --freeze copysave area"))
 hl.bind(mainMod .. " + Print",     hl.dsp.exec_cmd("grimblast copysave output"))
 
 -- Move focus with mainMod + arrow keys
@@ -405,15 +403,13 @@ for _, title in ipairs({
     hl.window_rule({ match = { title = title }, float = true })
 end
 
--- Flameshot overlay -- the capture UI is a normal Qt window, so without these
--- it tiles into the layout and the annotation canvas lands offset from the
--- screen it is drawing over. no_anim keeps the open animation from being
--- captured into the next shot.
+-- Flameshot overlay -- reports an empty class, so this has to match on title.
 hl.window_rule({
     name    = "flameshot",
-    match   = { class = "^(flameshot)$" },
+    match   = { title = "^flameshot$" },
     float   = true,
     pin     = true,
+    size    = { "monitor_w", "monitor_h" },
     move    = { "0", "0" },
     no_anim = true,
 })

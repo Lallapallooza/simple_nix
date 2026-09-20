@@ -1,4 +1,4 @@
-{ lib, pkgs, host, ... }:
+{ config, lib, pkgs, host, ... }:
 
 {
   imports = [
@@ -32,8 +32,10 @@
   nix.gc = {
     automatic = true;
     dates = "weekly";
-    options = "--delete-older-than 30d";
   };
+  # Keep the last 10 system generations instead of pruning by age.
+  systemd.services.nix-gc.serviceConfig.ExecStartPre =
+    "${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --delete-generations +10";
 
   nixpkgs.overlays = [
     (import ./overlays/amduprof.nix)
