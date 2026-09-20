@@ -1,4 +1,4 @@
-{ config, lib, pkgs, agenix, host, bv, ... }:
+{ config, lib, pkgs, agenix, host, ... }:
 
 let
   mathLibs = with pkgs; [ blis openblas fftw gsl suitesparse eigen llvmPackages_latest.openmp ];
@@ -206,7 +206,6 @@ in
     # scripts/install-ai-tools.sh; they update too often for OS rebuilds)
     glow
     bubblewrap                 # sandbox runtime for the native claude-code install
-    br bv                      # Rust port of beads (overlay) + Go TUI viewer (flake input)
 
     # LSP servers (for neovim)
     bash-language-server

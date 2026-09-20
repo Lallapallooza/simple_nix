@@ -26,7 +26,6 @@ nixos/                   # NixOS system config (flake-based)
   programs.nix           # system packages, steam, docker, flatpak
   update-check.nix       # nightly check for upstream changes + notification
   nordvpn.nix            # NordVPN daemon + GUI (FHS-wrapped from .deb)
-  overlays/cli-tools.nix # br built from source (upstream flake is broken)
   home/                  # home-manager modules
 scripts/
   install-ai-tools.sh    # native install of claude-code + codex to ~/.local/bin
@@ -356,8 +355,6 @@ claude-code and codex release too often to package in nix (an OS rebuild per bum
 ```
 
 claude-code uses Anthropic's official installer and self-updates afterwards. codex installs from npm (`@openai/codex`, vendors static musl binaries that run on NixOS unpatched) with `--prefix ~/.local`; rerun the script to update it.
-
-br is built from source in `nixos/overlays/cli-tools.nix` because its upstream flake is broken.
 
 The nightly update check (`nixos/update-check.nix`) is **enabled by default** (`updateCheck = true` in `host.nix`). It fetches `origin/main` and notifies you (shell login + desktop notification) if your local branch is behind. It never pulls commits, changes `flake.lock`, rebuilds, or activates NixOS. Review and apply upstream changes manually when you are ready. Set `updateCheck = false` to disable it.
 

@@ -79,5 +79,5 @@ in
 
   # --- System Health ---
   services.earlyoom.enable = true;      # Kill runaway processes before OOM freezes the desktop
-  services.journald.extraConfig = "SystemMaxUse=500M";   # Cap journal logs (default is ~4GB)
+  services.journald.settings.Journal.SystemMaxUse = "500M";   # Cap journal logs (default is ~4GB)
 }

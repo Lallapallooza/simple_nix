@@ -1,4 +1,4 @@
-{ lib, pkgs, host, cliToolsOverlay, ... }:
+{ lib, pkgs, host, ... }:
 
 {
   imports = [
@@ -36,7 +36,6 @@
   };
 
   nixpkgs.overlays = [
-    cliToolsOverlay
     (import ./overlays/amduprof.nix)
     (import ./overlays/nsight-graphics.nix)
   ];
