@@ -115,8 +115,7 @@ in
     # Haskell
     ghc cabal-install haskell-language-server
 
-    # Lean (lean4 ships lake + the `lean --server` LSP)
-    lean4
+    # Lean: removed until nixpkgs fixes lean4 -- cmake 4.4 broke its stage install prefix.
 
     # Idris
     idris2 idris2Packages.idris2Lsp
