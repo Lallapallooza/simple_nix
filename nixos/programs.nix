@@ -1,7 +1,8 @@
 { config, lib, pkgs, agenix, host, ... }:
 
 let
-  mathLibs = with pkgs; [ blis openblas fftw gsl suitesparse eigen llvmPackages_latest.openmp ];
+  # openmp tracks default llvmPackages to match clang; llvmPackages_latest doesn't build.
+  mathLibs = with pkgs; [ blis openblas fftw gsl suitesparse eigen llvmPackages.openmp ];
   # Non-Nix desktop/game binaries dlopen these at runtime (via nix-ld):
   # Wayland + xkbcommon (display/input), Vulkan + libglvnd (GPU loaders), alsa-lib (audio), udev (devices).
   desktopRuntimeLibs = with pkgs; [ alsa-lib wayland libxkbcommon udev vulkan-loader libglvnd ];
