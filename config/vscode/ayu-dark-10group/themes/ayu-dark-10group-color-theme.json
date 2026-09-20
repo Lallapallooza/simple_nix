@@ -1,0 +1,796 @@
+{
+  "name": "Ayu Dark (10-group)",
+  "type": "dark",
+  "semanticHighlighting": true,
+
+  "colors": {
+    // --- Base ---
+    // Surface tiers mirror kdeglobals: View #0B0E14, Window #14171D, Button #1A1D23.
+    // The editor gets the deepest tier so code sits below the chrome, same as
+    // kitty's background against the wayle bar.
+    "foreground": "#B8B5AC",
+    "focusBorder": "#FF8F40",
+    "disabledForeground": "#3D4046",
+    "descriptionForeground": "#5C6773",
+    "errorForeground": "#F07178",
+    "selection.background": "#FF8F4066",
+    "widget.border": "#1A1D23",
+    "widget.shadow": "#00000066",
+    "icon.foreground": "#B8B5AC",
+    "sash.hoverBorder": "#FF8F40",
+    "textLink.foreground": "#59C2FF",
+    "textLink.activeForeground": "#73D0FF",
+    "textPreformat.foreground": "#80DDB8",
+    "textBlockQuote.background": "#14171D",
+    "textBlockQuote.border": "#FF8F40",
+    "textCodeBlock.background": "#14171D",
+    "textSeparator.foreground": "#1A1D23",
+
+    // --- Editor ---
+    "editor.background": "#0B0E14",
+    "editor.foreground": "#B8B5AC",
+    "editorLineNumber.foreground": "#3D4046",
+    "editorLineNumber.activeForeground": "#FF8F40",
+    "editorCursor.foreground": "#FF8F40",
+    "editorCursor.background": "#0B0E14",
+    // kitty renders selection as solid orange; at editor scale that is far too
+    // loud, so the same accent is used at 20% over the background instead.
+    "editor.selectionBackground": "#FF8F4033",
+    "editor.selectionHighlightBackground": "#FF8F401A",
+    "editor.inactiveSelectionBackground": "#FF8F4014",
+    "editor.wordHighlightBackground": "#59C2FF26",
+    "editor.wordHighlightStrongBackground": "#80DDB826",
+    "editor.findMatchBackground": "#FF8F4059",
+    "editor.findMatchHighlightBackground": "#E6C54C33",
+    "editor.findRangeHighlightBackground": "#14171D",
+    "editor.lineHighlightBackground": "#14171D",
+    "editor.lineHighlightBorder": "#00000000",
+    "editor.rangeHighlightBackground": "#14171D",
+    "editor.hoverHighlightBackground": "#59C2FF26",
+    "editor.foldBackground": "#14171D",
+    "editorWhitespace.foreground": "#1A1D23",
+    "editorIndentGuide.background1": "#1A1D23",
+    "editorIndentGuide.activeBackground1": "#3D4046",
+    "editorRuler.foreground": "#1A1D23",
+    "editorCodeLens.foreground": "#5C6773",
+    "editorLightBulb.foreground": "#E6C54C",
+    "editorBracketMatch.background": "#FF8F4026",
+    "editorBracketMatch.border": "#FF8F40",
+    "editorLink.activeForeground": "#59C2FF",
+
+    // Inlay hints -- rust-analyzer and clangd lean on these heavily.
+    // Type hints reuse type blue, parameter hints reuse parameter purple, so an
+    // inline hint reads as the same role it would if written out.
+    "editorInlayHint.foreground": "#5C6773",
+    "editorInlayHint.background": "#14171D",
+    "editorInlayHint.typeForeground": "#59C2FF",
+    "editorInlayHint.typeBackground": "#14171D",
+    "editorInlayHint.parameterForeground": "#D2A6FF",
+    "editorInlayHint.parameterBackground": "#14171D",
+
+    // Bracket pair colorization -- ordered to avoid adjacent red/green pairs,
+    // same CVD constraint as the syntax groups.
+    "editorBracketHighlight.foreground1": "#FF8F40",
+    "editorBracketHighlight.foreground2": "#59C2FF",
+    "editorBracketHighlight.foreground3": "#D2A6FF",
+    "editorBracketHighlight.foreground4": "#80DDB8",
+    "editorBracketHighlight.foreground5": "#E6C54C",
+    "editorBracketHighlight.foreground6": "#39BAE6",
+    "editorBracketHighlight.unexpectedBracket.foreground": "#F07178",
+
+    // --- Diagnostics ---
+    "editorError.foreground": "#F07178",
+    "editorWarning.foreground": "#E6C54C",
+    "editorInfo.foreground": "#59C2FF",
+    "editorHint.foreground": "#80DDB8",
+    "problemsErrorIcon.foreground": "#F07178",
+    "problemsWarningIcon.foreground": "#E6C54C",
+    "problemsInfoIcon.foreground": "#59C2FF",
+
+    // --- Gutter / overview ruler ---
+    "editorGutter.background": "#0B0E14",
+    "editorGutter.addedBackground": "#AAD94C",
+    "editorGutter.modifiedBackground": "#E6C54C",
+    "editorGutter.deletedBackground": "#F07178",
+    "editorOverviewRuler.border": "#00000000",
+    "editorOverviewRuler.addedForeground": "#AAD94C99",
+    "editorOverviewRuler.modifiedForeground": "#E6C54C99",
+    "editorOverviewRuler.deletedForeground": "#F0717899",
+    "editorOverviewRuler.errorForeground": "#F07178",
+    "editorOverviewRuler.warningForeground": "#E6C54C",
+    "editorOverviewRuler.infoForeground": "#59C2FF",
+    "editorOverviewRuler.findMatchForeground": "#FF8F4099",
+    "editorOverviewRuler.selectionHighlightForeground": "#FF8F4066",
+
+    // --- Diff ---
+    "diffEditor.insertedTextBackground": "#AAD94C1A",
+    "diffEditor.removedTextBackground": "#F071781A",
+    "diffEditor.insertedLineBackground": "#AAD94C14",
+    "diffEditor.removedLineBackground": "#F0717814",
+    "diffEditor.border": "#1A1D23",
+
+    // --- Chrome: activity bar, sidebar, tabs, status, title ---
+    "activityBar.background": "#14171D",
+    "activityBar.foreground": "#B8B5AC",
+    "activityBar.inactiveForeground": "#3D4046",
+    "activityBar.border": "#1A1D23",
+    "activityBar.activeBorder": "#FF8F40",
+    "activityBarBadge.background": "#FF8F40",
+    "activityBarBadge.foreground": "#0B0E14",
+
+    "sideBar.background": "#14171D",
+    "sideBar.foreground": "#B8B5AC",
+    "sideBar.border": "#1A1D23",
+    "sideBarTitle.foreground": "#5C6773",
+    "sideBarSectionHeader.background": "#1A1D23",
+    "sideBarSectionHeader.foreground": "#B8B5AC",
+    "sideBarSectionHeader.border": "#1A1D23",
+
+    "editorGroup.border": "#1A1D23",
+    "editorGroupHeader.tabsBackground": "#14171D",
+    "editorGroupHeader.tabsBorder": "#1A1D23",
+    "editorGroupHeader.noTabsBackground": "#14171D",
+
+    "tab.activeBackground": "#0B0E14",
+    "tab.activeForeground": "#B8B5AC",
+    "tab.inactiveBackground": "#14171D",
+    "tab.inactiveForeground": "#3D4046",
+    "tab.border": "#1A1D23",
+    "tab.activeBorderTop": "#FF8F40",
+    "tab.unfocusedActiveBorderTop": "#3D4046",
+    "tab.activeModifiedBorder": "#E6C54C",
+    "tab.hoverBackground": "#1A1D23",
+
+    "statusBar.background": "#14171D",
+    "statusBar.foreground": "#B8B5AC",
+    "statusBar.border": "#1A1D23",
+    "statusBar.noFolderBackground": "#14171D",
+    "statusBar.debuggingBackground": "#FF8F40",
+    "statusBar.debuggingForeground": "#0B0E14",
+    "statusBarItem.remoteBackground": "#FF8F40",
+    "statusBarItem.remoteForeground": "#0B0E14",
+    "statusBarItem.hoverBackground": "#1A1D23",
+    "statusBarItem.errorBackground": "#F07178",
+    "statusBarItem.errorForeground": "#0B0E14",
+    "statusBarItem.warningBackground": "#E6C54C",
+    "statusBarItem.warningForeground": "#0B0E14",
+
+    "titleBar.activeBackground": "#14171D",
+    "titleBar.activeForeground": "#B8B5AC",
+    "titleBar.inactiveBackground": "#0B0E14",
+    "titleBar.inactiveForeground": "#3D4046",
+    "titleBar.border": "#1A1D23",
+
+    "breadcrumb.background": "#0B0E14",
+    "breadcrumb.foreground": "#5C6773",
+    "breadcrumb.focusForeground": "#B8B5AC",
+    "breadcrumb.activeSelectionForeground": "#FF8F40",
+    "breadcrumbPicker.background": "#14171D",
+
+    // --- Panel / terminal ---
+    "panel.background": "#0B0E14",
+    "panel.border": "#1A1D23",
+    "panelTitle.activeForeground": "#B8B5AC",
+    "panelTitle.inactiveForeground": "#3D4046",
+    "panelTitle.activeBorder": "#FF8F40",
+    "panelSection.border": "#1A1D23",
+
+    // The 16 ANSI slots are copied verbatim from config/kitty/kitty.conf so an
+    // integrated terminal and a kitty window render identical output.
+    "terminal.background": "#0B0E14",
+    "terminal.foreground": "#B8B5AC",
+    "terminal.selectionBackground": "#FF8F4033",
+    "terminalCursor.foreground": "#FF8F40",
+    "terminalCursor.background": "#0B0E14",
+    "terminal.border": "#1A1D23",
+    "terminal.ansiBlack": "#0B0E14",
+    "terminal.ansiBrightBlack": "#3D4046",
+    "terminal.ansiRed": "#F07178",
+    "terminal.ansiBrightRed": "#F07178",
+    "terminal.ansiGreen": "#AAD94C",
+    "terminal.ansiBrightGreen": "#AAD94C",
+    "terminal.ansiYellow": "#E6C54C",
+    "terminal.ansiBrightYellow": "#FFEE99",
+    "terminal.ansiBlue": "#59C2FF",
+    "terminal.ansiBrightBlue": "#59C2FF",
+    "terminal.ansiMagenta": "#D2A6FF",
+    "terminal.ansiBrightMagenta": "#D2A6FF",
+    "terminal.ansiCyan": "#39BAE6",
+    "terminal.ansiBrightCyan": "#80DDB8",
+    "terminal.ansiWhite": "#B8B5AC",
+    "terminal.ansiBrightWhite": "#C9C7BE",
+
+    // --- Lists / trees ---
+    "list.activeSelectionBackground": "#1A1D23",
+    "list.activeSelectionForeground": "#FF8F40",
+    "list.inactiveSelectionBackground": "#14171D",
+    "list.inactiveSelectionForeground": "#B8B5AC",
+    "list.hoverBackground": "#1A1D23",
+    "list.hoverForeground": "#B8B5AC",
+    "list.focusBackground": "#1A1D23",
+    "list.focusForeground": "#B8B5AC",
+    "list.highlightForeground": "#FF8F40",
+    "list.errorForeground": "#F07178",
+    "list.warningForeground": "#E6C54C",
+    "list.dropBackground": "#1A1D23",
+    "tree.indentGuidesStroke": "#1A1D23",
+
+    // --- Inputs / controls ---
+    "input.background": "#14171D",
+    "input.foreground": "#B8B5AC",
+    "input.border": "#1A1D23",
+    "input.placeholderForeground": "#3D4046",
+    "inputOption.activeBackground": "#FF8F4033",
+    "inputOption.activeBorder": "#FF8F40",
+    "inputOption.activeForeground": "#FF8F40",
+    "inputValidation.errorBackground": "#14171D",
+    "inputValidation.errorBorder": "#F07178",
+    "inputValidation.warningBackground": "#14171D",
+    "inputValidation.warningBorder": "#E6C54C",
+    "inputValidation.infoBackground": "#14171D",
+    "inputValidation.infoBorder": "#59C2FF",
+
+    "dropdown.background": "#14171D",
+    "dropdown.foreground": "#B8B5AC",
+    "dropdown.border": "#1A1D23",
+    "dropdown.listBackground": "#14171D",
+
+    "button.background": "#FF8F40",
+    "button.foreground": "#0B0E14",
+    "button.hoverBackground": "#FFA35C",
+    "button.secondaryBackground": "#1A1D23",
+    "button.secondaryForeground": "#B8B5AC",
+    "button.secondaryHoverBackground": "#22262E",
+    "checkbox.background": "#14171D",
+    "checkbox.foreground": "#B8B5AC",
+    "checkbox.border": "#1A1D23",
+
+    "badge.background": "#FF8F40",
+    "badge.foreground": "#0B0E14",
+    "progressBar.background": "#FF8F40",
+
+    "scrollbar.shadow": "#00000066",
+    "scrollbarSlider.background": "#3D404666",
+    "scrollbarSlider.hoverBackground": "#3D404699",
+    "scrollbarSlider.activeBackground": "#FF8F4099",
+
+    "minimap.background": "#0B0E14",
+    "minimap.findMatchHighlight": "#FF8F40",
+    "minimap.selectionHighlight": "#FF8F4066",
+    "minimap.errorHighlight": "#F07178",
+    "minimap.warningHighlight": "#E6C54C",
+    "minimapSlider.background": "#3D404633",
+    "minimapSlider.hoverBackground": "#3D404666",
+    "minimapSlider.activeBackground": "#FF8F4066",
+
+    // --- Widgets / popups ---
+    "editorWidget.background": "#14171D",
+    "editorWidget.foreground": "#B8B5AC",
+    "editorWidget.border": "#1A1D23",
+    "editorHoverWidget.background": "#14171D",
+    "editorHoverWidget.foreground": "#B8B5AC",
+    "editorHoverWidget.border": "#1A1D23",
+    "editorSuggestWidget.background": "#14171D",
+    "editorSuggestWidget.foreground": "#B8B5AC",
+    "editorSuggestWidget.border": "#1A1D23",
+    "editorSuggestWidget.selectedBackground": "#1A1D23",
+    "editorSuggestWidget.selectedForeground": "#FF8F40",
+    "editorSuggestWidget.highlightForeground": "#FF8F40",
+    "editorMarkerNavigation.background": "#14171D",
+    "editorMarkerNavigationError.background": "#F07178",
+    "editorMarkerNavigationWarning.background": "#E6C54C",
+    "editorMarkerNavigationInfo.background": "#59C2FF",
+
+    "peekView.border": "#FF8F40",
+    "peekViewEditor.background": "#0B0E14",
+    "peekViewEditor.matchHighlightBackground": "#FF8F4059",
+    "peekViewResult.background": "#14171D",
+    "peekViewResult.foreground": "#B8B5AC",
+    "peekViewResult.selectionBackground": "#1A1D23",
+    "peekViewResult.selectionForeground": "#FF8F40",
+    "peekViewResult.matchHighlightBackground": "#FF8F4059",
+    "peekViewResult.lineForeground": "#B8B5AC",
+    "peekViewResult.fileForeground": "#59C2FF",
+    "peekViewTitle.background": "#14171D",
+    "peekViewTitleLabel.foreground": "#B8B5AC",
+    "peekViewTitleDescription.foreground": "#5C6773",
+
+    "quickInput.background": "#14171D",
+    "quickInput.foreground": "#B8B5AC",
+    "quickInputList.focusBackground": "#1A1D23",
+    "quickInputList.focusForeground": "#FF8F40",
+    "pickerGroup.border": "#1A1D23",
+    "pickerGroup.foreground": "#FF8F40",
+
+    "menu.background": "#14171D",
+    "menu.foreground": "#B8B5AC",
+    "menu.border": "#1A1D23",
+    "menu.selectionBackground": "#1A1D23",
+    "menu.selectionForeground": "#FF8F40",
+    "menu.separatorBackground": "#1A1D23",
+    "menubar.selectionBackground": "#1A1D23",
+    "menubar.selectionForeground": "#B8B5AC",
+
+    "notifications.background": "#14171D",
+    "notifications.foreground": "#B8B5AC",
+    "notifications.border": "#1A1D23",
+    "notificationCenterHeader.background": "#1A1D23",
+    "notificationCenterHeader.foreground": "#B8B5AC",
+    "notificationLink.foreground": "#59C2FF",
+    "notificationsErrorIcon.foreground": "#F07178",
+    "notificationsWarningIcon.foreground": "#E6C54C",
+    "notificationsInfoIcon.foreground": "#59C2FF",
+
+    // --- Git / SCM ---
+    "gitDecoration.addedResourceForeground": "#AAD94C",
+    "gitDecoration.untrackedResourceForeground": "#AAD94C",
+    "gitDecoration.modifiedResourceForeground": "#E6C54C",
+    "gitDecoration.deletedResourceForeground": "#F07178",
+    "gitDecoration.renamedResourceForeground": "#59C2FF",
+    "gitDecoration.stageModifiedResourceForeground": "#E6C54C",
+    "gitDecoration.stageDeletedResourceForeground": "#F07178",
+    "gitDecoration.ignoredResourceForeground": "#3D4046",
+    "gitDecoration.conflictingResourceForeground": "#FF8F40",
+    "gitDecoration.submoduleResourceForeground": "#D2A6FF",
+
+    // --- Debug ---
+    "debugToolBar.background": "#14171D",
+    "debugToolBar.border": "#1A1D23",
+    "debugIcon.breakpointForeground": "#F07178",
+    "debugIcon.breakpointDisabledForeground": "#3D4046",
+    "editor.stackFrameHighlightBackground": "#E6C54C26",
+    "editor.focusedStackFrameHighlightBackground": "#AAD94C26",
+    "debugConsoleInputIcon.foreground": "#FF8F40",
+    "debugTokenExpression.name": "#80DDB8",
+    "debugTokenExpression.value": "#B8B5AC",
+    "debugTokenExpression.string": "#AAD94C",
+    "debugTokenExpression.number": "#C4B070",
+    "debugTokenExpression.boolean": "#C4B070",
+    "debugTokenExpression.error": "#F07178",
+
+    // --- Misc ---
+    "settings.headerForeground": "#FF8F40",
+    "settings.modifiedItemIndicator": "#FF8F40",
+    "keybindingLabel.background": "#1A1D23",
+    "keybindingLabel.foreground": "#B8B5AC",
+    "keybindingLabel.border": "#1A1D23",
+    "keybindingLabel.bottomBorder": "#1A1D23",
+    "welcomePage.tileBackground": "#14171D",
+    "welcomePage.tileHoverBackground": "#1A1D23",
+    "walkThrough.embeddedEditorBackground": "#14171D",
+    "charts.red": "#F07178",
+    "charts.green": "#AAD94C",
+    "charts.yellow": "#E6C54C",
+    "charts.blue": "#59C2FF",
+    "charts.purple": "#D2A6FF",
+    "charts.orange": "#FF8F40",
+    "charts.foreground": "#B8B5AC",
+    "charts.lines": "#1A1D23"
+  },
+
+  // Semantic tokens are the LSP layer -- the direct analogue of the
+  // @lsp.type.* table in config/nvim/lua/chadrc.lua. They win over the
+  // TextMate rules below, which is what gives rust-analyzer / clangd /
+  // basedpyright their type-level precision.
+  "semanticTokenColors": {
+    // 1. Keywords
+    "keyword": "#FF7733",
+    "modifier": "#FF7733",
+
+    // 2. Functions
+    "function": "#E6C54C",
+    "method": "#E6C54C",
+    "function.defaultLibrary": "#E6C54C",
+
+    // 3. Strings
+    "string": "#AAD94C",
+    "formatSpecifier": "#80DDB8",
+    "escapeSequence": "#80DDB8",
+
+    // 4. Types + modules
+    "type": "#59C2FF",
+    "class": "#59C2FF",
+    "struct": "#59C2FF",
+    "interface": "#59C2FF",
+    "enum": "#59C2FF",
+    "union": "#59C2FF",
+    "typeParameter": "#59C2FF",
+    "typeAlias": "#59C2FF",
+    "namespace": "#59C2FF",
+    "builtinType": "#59C2FF",
+
+    // 5. Constants -- readonly bindings land here too, matching @constant
+    "number": "#C4B070",
+    "enumMember": "#C4B070",
+    "variable.readonly": "#C4B070",
+    "variable.readonly.defaultLibrary": "#C4B070",
+
+    // 6. Self / builtins
+    "selfKeyword": "#39BAE6",
+    "selfTypeKeyword": "#39BAE6",
+    "variable.defaultLibrary": "#39BAE6",
+
+    // 7. Properties
+    "property": "#80DDB8",
+    "field": "#80DDB8",
+    "member": "#80DDB8",
+
+    // 8. Parameters
+    "parameter": "#D2A6FF",
+    "lifetime": "#D2A6FF",
+    "typeParameter.declaration": "#D2A6FF",
+
+    // 9. Decorators / macros
+    "decorator": "#E6C08A",
+    "macro": "#E6C08A",
+    "attribute": "#E6C08A",
+    "derive": "#E6C08A",
+    "attributeBracket": "#E6C08A",
+
+    // 10. Operators
+    "operator": "#CC7832",
+    "arithmetic": "#CC7832",
+    "bitwise": "#CC7832",
+    "comparison": "#CC7832",
+    "logical": "#CC7832",
+
+    // Ground level
+    "variable": "#B8B5AC",
+    "comment": "#5C6773",
+    "punctuation": "#887799",
+    "brace": "#887799",
+    "bracket": "#887799",
+    "parenthesis": "#887799",
+    "semicolon": "#887799",
+    "comma": "#887799",
+    "label": "#59C2FF",
+
+    // Modifiers -- mirrors @lsp.mod.deprecated / @lsp.mod.deactivated.
+    // `unsafe` is rust-analyzer's; red is the one place this config uses
+    // color as a warning inside code.
+    "*.deprecated": {
+      "strikethrough": true
+    },
+    "*.unsafe": "#F07178",
+    "comment.documentation": "#5C6773"
+  },
+
+  // TextMate rules are the treesitter-equivalent layer: they cover files with
+  // no language server attached, and every scope a server leaves untagged.
+  // Later rules win, so these run general -> specific.
+  "tokenColors": [
+    {
+      "name": "Ground level -- variables and plain text",
+      "scope": [
+        "variable",
+        "variable.other",
+        "variable.other.readwrite",
+        "meta.definition.variable.name",
+        "support.variable",
+        "source"
+      ],
+      "settings": { "foreground": "#B8B5AC" }
+    },
+    {
+      "name": "Comments",
+      "scope": [
+        "comment",
+        "punctuation.definition.comment",
+        "string.comment"
+      ],
+      "settings": { "foreground": "#5C6773" }
+    },
+    {
+      "name": "Punctuation -- quiet scaffolding",
+      "scope": [
+        "punctuation",
+        "punctuation.definition",
+        "punctuation.separator",
+        "punctuation.terminator",
+        "punctuation.accessor",
+        "punctuation.section",
+        "meta.brace",
+        "meta.delimiter"
+      ],
+      "settings": { "foreground": "#887799" }
+    },
+    {
+      "name": "10. Operators -- dark orange, below keyword brightness",
+      "scope": [
+        "keyword.operator",
+        "keyword.operator.arithmetic",
+        "keyword.operator.assignment",
+        "keyword.operator.comparison",
+        "keyword.operator.logical",
+        "keyword.operator.bitwise",
+        "keyword.operator.relational",
+        "keyword.operator.ternary",
+        "punctuation.separator.operator"
+      ],
+      "settings": { "foreground": "#CC7832" }
+    },
+    {
+      "name": "1. Keywords -- the anchor color",
+      "scope": [
+        "keyword",
+        "keyword.control",
+        "keyword.other",
+        "keyword.control.flow",
+        "keyword.control.conditional",
+        "keyword.control.loop",
+        "keyword.control.exception",
+        "keyword.control.return",
+        "storage",
+        "storage.type",
+        "storage.modifier",
+        "storage.class",
+        "variable.language.super"
+      ],
+      "settings": { "foreground": "#FF7733" }
+    },
+    {
+      "name": "1b. Word operators read as keywords, not symbols",
+      "scope": [
+        "keyword.operator.word",
+        "keyword.operator.new",
+        "keyword.operator.expression",
+        "keyword.operator.delete",
+        "keyword.operator.in",
+        "keyword.operator.of",
+        "keyword.operator.instanceof",
+        "keyword.operator.sizeof"
+      ],
+      "settings": { "foreground": "#FF7733" }
+    },
+    {
+      "name": "4. Types, classes, namespaces, tags",
+      "scope": [
+        "entity.name.type",
+        "entity.name.class",
+        "entity.name.struct",
+        "entity.name.enum",
+        "entity.name.union",
+        "entity.name.trait",
+        "entity.name.interface",
+        "entity.name.namespace",
+        "entity.name.scope-resolution",
+        "entity.other.inherited-class",
+        "support.type",
+        "support.class",
+        "storage.type.primitive",
+        "storage.type.built-in",
+        "entity.name.tag",
+        "meta.type.name"
+      ],
+      "settings": { "foreground": "#59C2FF" }
+    },
+    {
+      "name": "4b. Imports and module paths are type-adjacent",
+      "scope": [
+        "keyword.control.import",
+        "keyword.control.from",
+        "keyword.control.export",
+        "keyword.other.import",
+        "keyword.other.using",
+        "keyword.package",
+        "entity.name.module",
+        "support.module"
+      ],
+      "settings": { "foreground": "#59C2FF" }
+    },
+    {
+      "name": "2. Functions and methods",
+      "scope": [
+        "entity.name.function",
+        "entity.name.method",
+        "support.function",
+        "meta.function-call",
+        "meta.function-call.generic",
+        "variable.function",
+        "entity.name.function.member"
+      ],
+      "settings": { "foreground": "#E6C54C" }
+    },
+    {
+      "name": "3. Strings",
+      "scope": [
+        "string",
+        "string.quoted",
+        "string.quoted.single",
+        "string.quoted.double",
+        "string.quoted.triple",
+        "string.template",
+        "string.unquoted",
+        "string.interpolated",
+        "punctuation.definition.string"
+      ],
+      "settings": { "foreground": "#AAD94C" }
+    },
+    {
+      "name": "3b. Regex, escapes and format specifiers -- mint, same as properties",
+      "scope": [
+        "string.regexp",
+        "constant.character.escape",
+        "constant.other.placeholder",
+        "punctuation.definition.template-expression",
+        "meta.template.expression",
+        "constant.character.format.placeholder"
+      ],
+      "settings": { "foreground": "#80DDB8" }
+    },
+    {
+      "name": "5. Constants and numbers -- muted gold, dimmer than fg so they recede",
+      "scope": [
+        "constant",
+        "constant.numeric",
+        "constant.numeric.integer",
+        "constant.numeric.float",
+        "constant.numeric.hex",
+        "constant.language",
+        "constant.language.boolean",
+        "constant.language.null",
+        "constant.other",
+        "constant.character",
+        "variable.other.constant",
+        "variable.other.enummember",
+        "support.constant"
+      ],
+      "settings": { "foreground": "#C4B070" }
+    },
+    {
+      "name": "6. Self and builtins",
+      "scope": [
+        "variable.language",
+        "variable.language.this",
+        "variable.language.self",
+        "keyword.other.this",
+        "support.type.builtin",
+        "support.variable.language"
+      ],
+      "settings": { "foreground": "#39BAE6" }
+    },
+    {
+      "name": "7. Properties, fields, object keys, tag attributes",
+      "scope": [
+        "variable.other.property",
+        "variable.other.member",
+        "variable.other.object.property",
+        "support.variable.property",
+        "meta.object-literal.key",
+        "entity.name.variable.field",
+        "entity.other.attribute-name",
+        "meta.attribute.class"
+      ],
+      "settings": { "foreground": "#80DDB8" }
+    },
+    {
+      "name": "8. Parameters and lifetimes",
+      "scope": [
+        "variable.parameter",
+        "meta.function.parameters variable",
+        "meta.parameter",
+        "storage.modifier.lifetime",
+        "entity.name.lifetime",
+        "punctuation.definition.lifetime"
+      ],
+      "settings": { "foreground": "#D2A6FF" }
+    },
+    {
+      "name": "9. Decorators, macros, attributes, preprocessor",
+      "scope": [
+        "entity.name.function.decorator",
+        "entity.name.function.macro",
+        "entity.name.function.preprocessor",
+        "meta.decorator",
+        "punctuation.decorator",
+        "meta.attribute",
+        "meta.annotation",
+        "storage.type.annotation",
+        "keyword.control.directive",
+        "keyword.preprocessor",
+        "punctuation.definition.directive",
+        "entity.name.function.directive"
+      ],
+      "settings": { "foreground": "#E6C08A" }
+    },
+    {
+      "name": "Invalid",
+      "scope": [
+        "invalid",
+        "invalid.illegal",
+        "invalid.broken"
+      ],
+      "settings": { "foreground": "#F07178" }
+    },
+    {
+      "name": "Deprecated",
+      "scope": "invalid.deprecated",
+      "settings": { "foreground": "#3D4046" }
+    },
+    {
+      "name": "Diff",
+      "scope": [
+        "markup.inserted",
+        "meta.diff.header.to-file",
+        "punctuation.definition.inserted"
+      ],
+      "settings": { "foreground": "#AAD94C" }
+    },
+    {
+      "scope": [
+        "markup.deleted",
+        "meta.diff.header.from-file",
+        "punctuation.definition.deleted"
+      ],
+      "settings": { "foreground": "#F07178" }
+    },
+    {
+      "scope": [
+        "markup.changed",
+        "punctuation.definition.changed"
+      ],
+      "settings": { "foreground": "#E6C54C" }
+    },
+    {
+      "name": "Markdown -- headings, emphasis, code, links",
+      "scope": [
+        "markup.heading",
+        "entity.name.section",
+        "punctuation.definition.heading"
+      ],
+      "settings": { "foreground": "#59C2FF", "fontStyle": "bold" }
+    },
+    {
+      "scope": "markup.bold",
+      "settings": { "foreground": "#FF8F40", "fontStyle": "bold" }
+    },
+    {
+      // No italic anywhere -- the monospace grid stays intact, same rule the
+      // neovim theme follows. Emphasis carries through color instead.
+      "scope": "markup.italic",
+      "settings": { "foreground": "#FF8F40" }
+    },
+    {
+      "scope": [
+        "markup.inline.raw",
+        "markup.raw",
+        "markup.fenced_code"
+      ],
+      "settings": { "foreground": "#80DDB8" }
+    },
+    {
+      "scope": [
+        "markup.underline.link",
+        "string.other.link"
+      ],
+      "settings": { "foreground": "#59C2FF" }
+    },
+    {
+      "scope": "markup.quote",
+      "settings": { "foreground": "#5C6773" }
+    },
+    {
+      "scope": "markup.list punctuation.definition.list",
+      "settings": { "foreground": "#FF8F40" }
+    },
+    {
+      "name": "Config formats -- JSON/YAML/TOML keys read as properties",
+      "scope": [
+        "support.type.property-name.json",
+        "support.type.property-name.toml",
+        "entity.name.tag.yaml",
+        "support.type.property-name.table.toml"
+      ],
+      "settings": { "foreground": "#80DDB8" }
+    },
+    {
+      "name": "Shell -- variables keep parameter purple",
+      "scope": [
+        "variable.other.normal.shell",
+        "variable.other.bracket.shell",
+        "punctuation.definition.variable.shell"
+      ],
+      "settings": { "foreground": "#D2A6FF" }
+    }
+  ]
+}

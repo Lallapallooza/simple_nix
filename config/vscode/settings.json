@@ -1,0 +1,10 @@
+{
+  "workbench.colorTheme": "Ayu Dark (10-group)",
+  "window.autoDetectColorScheme": false,
+  "editor.semanticHighlighting.enabled": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.fontFamily": "'JetBrainsMono Nerd Font Mono', monospace",
+  "editor.fontLigatures": false,
+  "terminal.integrated.minimumContrastRatio": 1
+}

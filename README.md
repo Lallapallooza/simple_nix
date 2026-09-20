@@ -189,6 +189,10 @@ Design choices:
 
 Applied via:
 - **kitty** -- 16 terminal colors + cursor/selection in `kitty.conf`
+- **VS Code** -- local theme extension in `config/vscode/`, carrying both the
+  desktop palette and the 10-group syntax system. The terminal's 16 ANSI slots
+  are copied from `kitty.conf` so an integrated terminal matches a kitty window.
+  See `config/vscode/README.md`
 - **KDE** -- full Ayu Dark color scheme in `kdeglobals` (deployed by home-manager)
 - **GTK 3/4** -- accent, destructive, success, warning, error overrides in `gtk.css`
 - **rofi** -- custom `ayu-dark.rasi` theme

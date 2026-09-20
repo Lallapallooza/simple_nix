@@ -25,7 +25,8 @@ install_claude() {
   echo "-- claude-code ----------------------------"
   if [[ -x "${BIN_DIR}/claude" ]]; then
     echo "  installed: $("${BIN_DIR}/claude" --version 2>/dev/null || echo '?')"
-    echo "  claude self-updates; run 'claude update' to force a check"
+    claude update
+    echo "  claude updated"
     return
   fi
   curl -fsSL https://claude.ai/install.sh | bash

@@ -1,0 +1,24 @@
+{
+  "name": "ayu-dark-10group",
+  "displayName": "Ayu Dark (10-group)",
+  "description": "Ayu Dark with the 10-group syntax system shared by kitty, neovim, wayle, rofi and KDE in this config. Not published -- loaded from ~/.vscode/extensions via link.sh.",
+  "version": "1.0.0",
+  "publisher": "local",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Ayu Dark (10-group)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ayu-dark-10group-color-theme.json"
+      }
+    ]
+  }
+}

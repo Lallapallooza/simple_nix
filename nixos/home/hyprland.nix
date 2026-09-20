@@ -1,16 +1,16 @@
 { ... }:
 
 {
-  # Hyprland -- HM generates hyprland.conf which just sources the user config
+  # Hyprland -- HM generates hyprland.lua which just loads the user config
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "hyprlang";   # extraConfig below is hyprlang; pin it so the 26.05 default flip to lua does not reinterpret it
+    configType = "lua";        # hyprlang/.conf support is dropped in Hyprland 0.57
     systemd.enable = false;   # UWSM handles session management when enabled
     package = null;            # NixOS module provides the package, avoid conflict
     portalPackage = null;      # System-level xdg.portal handles portals, avoid path override
     plugins = [];
     extraConfig = ''
-      source = ~/.config/hypr/user.conf
+      dofile((os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")) .. "/hypr/user.lua")
     '';
   };
 }

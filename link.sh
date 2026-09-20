@@ -58,7 +58,7 @@ if [[ -d "$HOME/.config/wayle/styles" && ! -L "$HOME/.config/wayle/styles" ]]; t
 fi
 ln -sfn "$REPO/config/wayle/styles" "$HOME/.config/wayle/styles"
 mkdir -p "$HOME/.config/hypr"
-for f in user.conf hypridle.conf hyprlock.conf hyprpaper.conf cheatsheet.sh toggle-layout.sh; do
+for f in user.lua hypridle.conf hyprlock.conf hyprpaper.conf cheatsheet.sh toggle-layout.sh; do
   ln -sf "$REPO/config/hypr/$f" "$HOME/.config/hypr/$f"
 done
 
@@ -83,6 +83,24 @@ ln -sfn "$REPO/config/rofi" "$HOME/.config/rofi"
 echo "==> Symlinking p10k config..."
 ln -sf "$REPO/config/p10k/.p10k.zsh" "$HOME/.p10k.zsh"
 
+
+echo "==> Symlinking VS Code theme..."
+mkdir -p "$HOME/.vscode/extensions"
+ln -sfn "$REPO/config/vscode/ayu-dark-10group" "$HOME/.vscode/extensions/local.ayu-dark-10group"
+
+# settings.json is NOT symlinked: VS Code rewrites it on every UI settings
+# change, which would turn each tweak into a repo diff. Merge our keys in and
+# leave the rest of the file alone. Repo values win on conflict.
+VSCODE_SETTINGS="$HOME/.config/Code/User/settings.json"
+mkdir -p "$(dirname "$VSCODE_SETTINGS")"
+[[ -f "$VSCODE_SETTINGS" ]] || echo '{}' > "$VSCODE_SETTINGS"
+if merged=$(jq -s '.[0] * .[1]' "$VSCODE_SETTINGS" "$REPO/config/vscode/settings.json" 2>/dev/null); then
+  printf '%s\n' "$merged" > "$VSCODE_SETTINGS"
+  echo "    Merged theme keys into $VSCODE_SETTINGS"
+else
+  # jq rejects JSONC; VS Code allows comments in settings.json.
+  echo "    SKIP: $VSCODE_SETTINGS is not plain JSON (comments?), apply config/vscode/settings.json by hand" >&2
+fi
 
 echo "==> Symlinking clangd config..."
 mkdir -p "$HOME/.config/clangd"

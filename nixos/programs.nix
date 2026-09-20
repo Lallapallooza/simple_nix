@@ -46,6 +46,11 @@ in
   virtualisation.podman.enable = true;
   services.flatpak.enable = true;       # Flatpak for apps that need it (e.g. Discord with Krisp)
   services.ivpn.enable = true;          # ivpn-service daemon; without it the CLI/UI have no /etc/opt/ivpn/mutable
+  # ...but don't run it at boot: the daemon polls IVPN's server list hourly even while
+  # logged out. Start it on demand before using the CLI/UI:
+  #   sudo systemctl start ivpn-service
+  # Same on-demand pattern as the nordvpn daemon in nordvpn.nix.
+  systemd.services.ivpn-service.wantedBy = lib.mkForce [ ];
   services.printing = {
     enable = true;
     browsing = false;                  # Don't advertise printers on the network
@@ -77,6 +82,9 @@ in
     tree                       # Directory listing as tree
     psmisc                     # killall, pstree
     procps                     # pgrep, pkill, ps
+    lsof                       # List open files/sockets by process
+    lm_sensors                 # `sensors` -- hwmon readout (Tctl, per-CCD temps, fans)
+    parallel                   # GNU parallel -- run jobs concurrently from lists/pipes
     tmux                       # Terminal multiplexer
     mc                         # Midnight Commander file manager
     ntfs3g                     # NTFS filesystem support
@@ -115,9 +123,11 @@ in
     # C/C++ / CUDA
     gnumake cmake ninja gcc clang
     clang-tools                # clangd LSP
+    bear                       # Records a build into compile_commands.json so clangd works on non-CMake projects
     llvmPackages_latest.llvm   # LLVM tools (opt, llvm-ar, llvm-nm, etc.)
     llvmPackages_latest.lld    # LLVM linker
     llvmPackages_latest.lldb   # LLVM debugger
+    gdb                        # GNU debugger (core dumps, rust-gdb pretty-printers; cuda-gdb ships with cudatoolkit)
     pkg-config                 # Library metadata resolver (used by cmake/autotools/cargo)
     sccache                    # Compiler cache for C/C++/CUDA (via CMake launcher). Skipped for Rust -- conflicts with incremental compilation.
     mold                       # Fast parallel linker; opt-in per-project via -fuse-ld=mold or .cargo/config.toml
@@ -169,6 +179,7 @@ in
     hyperfine                  # CLI benchmarking (--export-json)
     samply                     # Modern sampling profiler -> Firefox Profiler
     hotspot                    # GUI for perf data
+    tracy                      # Frame profiler -- instrumented CPU+GPU timeline for real-time renderers (tracy-client crate)
     cargo-flamegraph           # `cargo flamegraph` convenience for Rust
     heaptrack                  # Heap profiler for C/C++/Rust (fast, text report)
     valgrind                   # memcheck/massif/callgrind/cachegrind
@@ -177,6 +188,7 @@ in
     scalene                    # Python CPU+memory+GPU, Python vs native split
     bpftrace                   # eBPF dynamic tracing (JSON output)
     bcc                        # BCC toolkit: offcputime, profile, execsnoop, etc.
+    ltrace                     # Library-call tracer (strace's dynamic-symbol counterpart; strace comes from NixOS defaults)
     uftrace                    # Function-graph tracer (C/C++/Rust)
     likwid                     # Zen PMU counters: cache/mem/FLOPS/AVX, topology-aware
     hwloc                      # Hardware topology (lstopo, hwloc-bind, hwloc-info)
@@ -237,6 +249,7 @@ in
     wl-clipboard               # Wayland clipboard (wl-copy/wl-paste)
     socat                      # Unix socket relay (Hyprland event-socket debugging)
     grimblast                  # Screenshot helper (wraps grim+slurp+wl-copy)
+    flameshot                  # Screenshot with annotation UI -- bound to Print (wlroots capture via grim is on by default)
     grim                       # Screenshot capture
     slurp                      # Region selection for screenshots
 
