@@ -84,9 +84,10 @@ echo "==> Symlinking p10k config..."
 ln -sf "$REPO/config/p10k/.p10k.zsh" "$HOME/.p10k.zsh"
 
 
-echo "==> Symlinking VS Code theme..."
-mkdir -p "$HOME/.vscode/extensions"
-ln -sfn "$REPO/config/vscode/ayu-dark-10group" "$HOME/.vscode/extensions/local.ayu-dark-10group"
+echo "==> Installing VS Code theme..."
+# Not a symlink: VS Code only loads extensions listed in its extensions.json
+# manifest, which it writes on install. A symlink here is silently ignored.
+"$REPO/config/vscode/install-theme.sh"
 
 # settings.json is NOT symlinked: VS Code rewrites it on every UI settings
 # change, which would turn each tweak into a repo diff. Merge our keys in and

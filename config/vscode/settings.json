@@ -5,6 +5,9 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
   "editor.fontFamily": "'JetBrainsMono Nerd Font Mono', monospace",
+  "editor.fontSize": 13,
   "editor.fontLigatures": false,
-  "terminal.integrated.minimumContrastRatio": 1
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.minimumContrastRatio": 1,
+  "window.zoomLevel": 1.139
 }
