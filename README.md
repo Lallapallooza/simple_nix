@@ -209,6 +209,13 @@ Applied via:
   blue directories, green executables, cyan links, and thin borders.
   Home-manager installs it into `~/.local/share/mc/skins/` and selects it in `mc/ini`.
   Preview without rebuilding: `mc -S "$PWD/config/mc/skins/ayu-dark.ini"`
+  The F2 menu keeps the packaged actions and adds **Shift+D** to drag the current
+  file (or tagged files) from Kitty into a GUI app. Drag from the Kitty interface;
+  it returns to MC after a successful drop, or press Esc to cancel. The original
+  tagged duplicate-delete action is on **Shift+E**.
+  The helper exports the selected files through the document portal with
+  session-only read access for Discord's Flatpak, so files can come from any
+  readable folder without configuring a list of allowed directories.
 - **VS Code** -- local theme extension in `config/vscode/`, carrying both the
   desktop palette and the 10-group syntax system. The terminal's 16 ANSI slots
   are copied from `kitty.conf` so an integrated terminal matches a kitty window.

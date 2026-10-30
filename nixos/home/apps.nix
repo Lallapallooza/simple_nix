@@ -25,6 +25,8 @@
 
   # --- Dotfile deployments (edit in repo, then nixos-rebuild switch) ---
   xdg.configFile."mc/ini".source = ../../config/mc/ini;
+  xdg.configFile."mc/menu".source = ../../config/mc/menu;
+  xdg.configFile."mc/drag-files.sh" = { source = ../../config/mc/drag-files.sh; executable = true; };
   xdg.configFile."mc/bat-viewer.sh" = { source = ../../config/mc/bat-viewer.sh; executable = true; };
   xdg.dataFile."mc/skins/ayu-dark.ini".source = ../../config/mc/skins/ayu-dark.ini;
 
