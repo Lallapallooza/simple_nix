@@ -124,7 +124,7 @@ label-color = "yellow"
 format = "{{ percent | int }}%"
 icon-color = "#D2A6FF"
 label-color = "#D2A6FF"
-left-click = "missioncenter"
+left-click = "$HOME/.config/wayle/launch.sh missioncenter"
 
 [[modules.cpu.thresholds]]
 above = 70
@@ -165,13 +165,13 @@ icon-name = "ld-thermometer-symbolic"
 # "back to normal" at 85C.
 icon-color = "blue"
 label-color = "blue"
-left-click = "missioncenter"
+left-click = "$HOME/.config/wayle/launch.sh missioncenter"
 
 [modules.ram]
 format = "{{ percent | int }}%"
 icon-color = "accent"
 label-color = "accent"
-left-click = "missioncenter"
+left-click = "$HOME/.config/wayle/launch.sh missioncenter"
 
 [[modules.ram.thresholds]]
 above = 75
@@ -188,7 +188,7 @@ mount-point = "/"
 format = "{{ percent | int }}%"
 icon-color = "blue"
 label-color = "blue"
-left-click = "missioncenter"
+left-click = "$HOME/.config/wayle/launch.sh missioncenter"
 
 [[modules.storage.thresholds]]
 above = 80
