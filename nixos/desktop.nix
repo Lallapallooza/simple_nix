@@ -1,5 +1,16 @@
 { pkgs, host, ... }:
 
+let
+  # The portal encodes a full-resolution PNG before Flameshot can show its UI.
+  # Its temporary capture needs no compression: at 4K this cuts grim's capture
+  # time from ~0.68s to ~0.05s without changing pixels or saved screenshot files.
+  screenshotPortal = pkgs.xdg-desktop-portal-hyprland.override {
+    grim = pkgs.writeShellScriptBin "grim" ''
+      exec ${pkgs.grim}/bin/grim -l 0 "$@"
+    '';
+  };
+in
+
 {
   # --- Display Manager ---
   services.xserver.enable = true;
@@ -16,13 +27,13 @@
     enable = true;
     withUWSM = true;
     xwayland.enable = true;   # Run X11 apps under Wayland
+    portalPackage = screenshotPortal;
   };
 
   # XDG portals -- required for screen sharing, file dialogs, and secrets in Wayland
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
     ];
     config = {
@@ -33,6 +44,13 @@
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
       };
     };
+  };
+
+  # Refresh the frontend's cached backend capabilities after a Hyprland portal
+  # restart (including rebuilds), so captures and screen sharing don't stall.
+  systemd.user.services.xdg-desktop-portal = {
+    partOf = [ "xdg-desktop-portal-hyprland.service" ];
+    after = [ "xdg-desktop-portal-hyprland.service" ];
   };
 
   # Dolphin needs the Plasma menu definition to discover apps for "Open With".

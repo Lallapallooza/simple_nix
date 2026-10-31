@@ -250,7 +250,7 @@ in
     wl-clipboard               # Wayland clipboard (wl-copy/wl-paste)
     socat                      # Unix socket relay (Hyprland event-socket debugging)
     grimblast                  # Screenshot helper (wraps grim+slurp+wl-copy)
-    flameshot                  # Screenshot with annotation UI -- bound to Print (wlroots capture via grim is on by default)
+    flameshot                  # Screenshot with annotation UI -- bound to Print (v14 captures via XDG portals)
     grim                       # Screenshot capture
     slurp                      # Region selection for screenshots
     gpu-screen-recorder-gtk    # GUI for gpu-screen-recorder -- window/screen capture with desktop/mic audio

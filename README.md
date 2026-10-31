@@ -108,7 +108,9 @@ Relog (SDDM) to pick up the new Hyprland session.
 ### Known issues
 
 - **Telegram steals focus on new messages** -- Telegram's "Draw attention to the window" feature uses Wayland activation, which Hyprland treats as a focus request. Go to Telegram -> Settings -> Notifications -> disable **Draw attention to the window**. See [hyprwm/Hyprland#9186](https://github.com/hyprwm/Hyprland/issues/9186).
-- **Screen share picker does nothing (Discord, etc.)** -- when `xdg-desktop-portal-hyprland` restarts without the `xdg-desktop-portal` frontend restarting too, the frontend keeps a stale capability cache and advertises zero capturable sources, so `SelectSources` hangs and no picker ever opens. Resync them with `systemctl --user restart xdg-desktop-portal.service`; it recurs on any backend-only restart (compositor restart, portal update).
+- **Steam says "Unable to open a connection to X"** -- check `xset q` and `/tmp/.X11-unix/`. If `DISPLAY=:0` is correct and XWayland is running, its socket may be missing. Logging out and back in recreates the sockets. If `X0` is missing but `X0_` is still a live socket owned by your user, `ln -s X0_ /tmp/.X11-unix/X0` can restore access without logging out; verify with `xset q`. The cause of the observed socket disappearance has not been established.
+- **Flameshot startup** -- the Hyprland portal uses `grim -l 0` for its temporary capture, avoiding expensive PNG compression. Print calls the running Flameshot daemon over D-Bus. The daemon uses Qt's X11 backend at `monitorScale`, keeping captures at native 3840×2160 instead of Qt Wayland's rounded 4608×2592. Together these measured ~0.11–0.12s to open the overlay on this machine, with stock Flameshot 14 and normal saved-image encoding. `Super+Shift+S` provides region capture without the annotation UI.
+- **Screen share picker stalls** -- when `xdg-desktop-portal-hyprland` restarts, the frontend can retain stale backend capabilities. The service dependency in `nixos/desktop.nix` restarts the frontend with the backend. To resync an existing session manually, run `systemctl --user restart xdg-desktop-portal.service`.
 
 ## Deployment
 

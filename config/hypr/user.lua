@@ -49,11 +49,12 @@ local configDir = (os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.conf
 -- Connector names (DP-1 vs DP-4) shuffle across reboots on this multi-GPU box,
 -- so pinning to one port left the display at scale 1.0 after a reboot.
 -- highrr keeps max refresh (4K panels often report 4K60 as preferred).
+local monitorScale = 1.666667
 hl.monitor({
     output   = "",
     mode     = "highrr",
     position = "auto",
-    scale    = 1.666667,
+    scale    = monitorScale,
 })
 
 
@@ -79,7 +80,8 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
 
-    hl.exec_cmd("flameshot")   -- tray daemon; `flameshot gui` exits 1 without it
+    -- X11 gives Qt the native screen size; Wayland reports a rounded 2x scale.
+    hl.exec_cmd("env QT_QPA_PLATFORM=xcb QT_SCALE_FACTOR=" .. monitorScale .. " flameshot")
 
     -- Polkit agent (for admin password prompts)
     hl.exec_cmd("lxqt-policykit-agent")
@@ -284,7 +286,10 @@ hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("kitty --class=notif-log sh -
 hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"), { locked = true })
 
 -- Screenshots
-hl.bind("Print",                   hl.dsp.exec_cmd("flameshot gui"))
+-- Reuse the tray daemon: starting a new Qt GUI adds ~50ms to every capture.
+hl.bind("Print", hl.dsp.exec_cmd(
+    "busctl --user --expect-reply=no call org.flameshot.Flameshot / org.flameshot.Flameshot captureScreen"
+))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("grimblast --freeze copysave area"))
 hl.bind(mainMod .. " + Print",     hl.dsp.exec_cmd("grimblast copysave output"))
 
@@ -416,15 +421,21 @@ for _, title in ipairs({
     hl.window_rule({ match = { title = title }, float = true })
 end
 
--- Flameshot overlay -- reports an empty class, so this has to match on title.
+-- Flameshot overlay -- the Wayland backend reports an empty class.
 hl.window_rule({
     name    = "flameshot",
     match   = { title = "^flameshot$" },
     float   = true,
     pin     = true,
-    size    = { "monitor_w", "monitor_h" },
-    move    = { "0", "0" },
     no_anim = true,
+})
+-- X11 fullscreen already requests native pixel dimensions. Only constrain the
+-- Wayland overlay, whose size is expressed in compositor logical coordinates.
+hl.window_rule({
+    name  = "flameshot-wayland-size",
+    match = { title = "^flameshot$", xwayland = false },
+    size  = { "monitor_w", "monitor_h" },
+    move  = { "0", "0" },
 })
 
 -- Picture-in-Picture
