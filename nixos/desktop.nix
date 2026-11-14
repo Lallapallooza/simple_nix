@@ -51,6 +51,10 @@ in
   systemd.user.services.xdg-desktop-portal = {
     partOf = [ "xdg-desktop-portal-hyprland.service" ];
     after = [ "xdg-desktop-portal-hyprland.service" ];
+    # default unit PATH is just coreutils/systemd, gio skips apps it can't find
+    # on PATH -> "No Apps available" when qt apps open files/folders
+    environment.PATH = pkgs.lib.mkForce
+      "/run/wrappers/bin:/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin";
   };
 
   # Dolphin needs the Plasma menu definition to discover apps for "Open With".
